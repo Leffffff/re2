@@ -1,0 +1,16 @@
+{
+  "name": "@skyfence/re2",
+  "version": "1.0.0",
+  "description": "RE2 for different platforms (Linux, Windows, macOS)",
+  "main": "re2.js",
+  "scripts": {
+    "prepublishOnly": "npm version patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://intersog.skyfence.com/vzhehlov/re2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
