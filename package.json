@@ -1,6 +1,6 @@
 {
   "name": "@skyfence/re2",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "RE2 for different platforms (Linux, Windows, macOS)",
   "main": "re2.js",
   "scripts": {
