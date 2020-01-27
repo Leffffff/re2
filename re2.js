@@ -27,4 +27,4 @@ if (typeof Symbol != 'undefined') {
     });
 }
 
-module.exports = RE2;
+exports.default = RE2;
