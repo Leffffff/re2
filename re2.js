@@ -1,27 +1,40 @@
 const RegExp2 = require("./re2Lib.js");
 
-exports.match = async (text, regex) => {
+const match = async (text, regex) => {
   return await RegExp2().then((re2) => {
-    const textStringOnWasmHeap = re2._malloc(text.length + 1);
-    re2.stringToUTF8(text, textStringOnWasmHeap, text.length + 1);
+    const textAddress = stringOnWasmHeap(re2, text);
+    const regexAddress = stringOnWasmHeap(re2, regex);
 
-    const regexStringOnWasmHeap = re2._malloc(regex.length + 1);
-    re2.stringToUTF8(regex, regexStringOnWasmHeap, regex.length + 1);
+    const matchedAddress = re2._singleMatch(textAddress, regexAddress);
+    const matchedString = matchedAddress !== 0
+      ? re2.UTF8ToString(matchedAddress)
+      : null;
 
-    return re2.UTF8ToString(
-      re2._singleMatch(textStringOnWasmHeap, regexStringOnWasmHeap)
-    );
+    freeUpMemory(re2, [textAddress, regexAddress, matchedAddress]);
+    return matchedString;
   });
 };
 
-exports.check = async (text, regex) => {
+const check = async (text, regex) => {
   return await RegExp2().then((re2) => {
-    const textStringOnWasmHeap = re2._malloc(text.length + 1);
-    re2.stringToUTF8(text, textStringOnWasmHeap, text.length + 1);
+    const textAddress = stringOnWasmHeap(re2, text);
+    const regexAddress = stringOnWasmHeap(re2, regex);
 
-    const regexStringOnWasmHeap = re2._malloc(regex.length + 1);
-    re2.stringToUTF8(regex, regexStringOnWasmHeap, regex.length + 1);
+    const isFulfilled = !!re2._check(textAddress, regexAddress);
 
-    return !!re2._check(textStringOnWasmHeap, regexStringOnWasmHeap);
+    freeUpMemory(re2, [textAddress, regexAddress]);
+    return isFulfilled;
   });
+};
+
+const freeUpMemory = (module, ptrs) => ptrs.forEach(module._free);
+
+const stringOnWasmHeap = (module, string) => {
+  const address = module._malloc(string.length + 1);
+  module.stringToUTF8(string, address, string.length + 1);
+  return address;
+};
+
+module.exports = {
+  match, check
 };

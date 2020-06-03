@@ -19,19 +19,26 @@ extern "C"
     //     return outString; /
     // }
 
-    char* singleMatch(char *text, char *regex)
-    {
-        std::string captured;
-        re2::RE2::PartialMatch(text, regex, &captured);
-        char *outString = new char[captured.length() + 1];
-        strcpy(outString, captured.c_str());
-        return outString;
-    }
-
     bool check(char *text, char *regex)
     {
         if (re2::RE2::PartialMatch(text, regex))
             return true;
-         return false;
+        return false;
+    }
+
+    char *singleMatch(char *text, char *regex)
+    {
+        if (check(text, regex))
+        {
+            std::string captured;
+            re2::RE2::PartialMatch(text, regex, &captured);
+            char *outString = new char[captured.length() + 1];
+            strcpy(outString, captured.c_str());
+            return outString;
+        }
+        else
+        {
+            return 0;
+        }
     }
 }
