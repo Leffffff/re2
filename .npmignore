@@ -1,7 +1,9 @@
+./vscode
 .DS_Store
 ./google-re2
 ./src
+.gitignore
 .gitmodules
 re2Wrapper.cc
-test.js
 README.md
+test.js
