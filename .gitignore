@@ -1,4 +1,6 @@
 .DS_Store
 .vscode/
 node_modules/
-google-re2/
+google-re2/*
+!google-re2/re2/*
+!google-re2/util/*
