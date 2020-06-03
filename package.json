@@ -4,7 +4,8 @@
   "description": "RE2 for different platforms (Linux, Windows, macOS)",
   "main": "re2.js",
   "scripts": {
-    "prepublishOnly": "npm version patch"
+    "prepublishOnly": "npm version patch",
+    "test": "node test/test.js"
   },
   "repository": {
     "type": "git",
