@@ -8,22 +8,28 @@
 
 extern "C"
 {
+    char *getPtr(std::string message)
+    {
+        char *m = new char[message.length() + 1];
+        strcpy(m, message.c_str());
+        return m;
+    }
 
-    // bool stringTestFunc2(char* inputString, char* inputRegex, char** outCapturedArray, int* outCapturedArraySize) {
+    // , char **outCapturedArray, int *outCapturedArraySize
+    // char **stringTestFunc2(char *inputString, char *inputRegex)
+    // {
     //     re2::RE2 regex(inputRegex);
-    //     std::cout<< regex.NumberOfCapturingGroups() <<std::endl;
-    //     std::string captured;
-    //     re2::RE2::FullMatch(text,regex, &captured);
-    //     char* outString = new char[captured.length() + 1];
+    //     std::cout << regex.NumberOfCapturingGroups() << std::endl;
+    //     // std::string captured;
+    //     re2::RE2::PartialMatchN(inputString, regex, ptr, regex.NumberOfCapturingGroups());
+    //     char *outString = new char[captured.length() + 1];
     //     strcpy(outString, captured.c_str());
-    //     return outString; /
+    //     return outString;
     // }
 
     bool check(char *text, char *regex)
     {
-        if (re2::RE2::PartialMatch(text, regex))
-            return true;
-        return false;
+        return re2::RE2::PartialMatch(text, regex);
     }
 
     char *singleMatch(char *text, char *regex)
@@ -32,13 +38,18 @@ extern "C"
         {
             std::string captured;
             re2::RE2::PartialMatch(text, regex, &captured);
-            char *outString = new char[captured.length() + 1];
-            strcpy(outString, captured.c_str());
-            return outString;
+            return getPtr(captured);
         }
         else
         {
             return 0;
         }
+    }
+
+    char *validate(char *regexp)
+    {
+        re2::RE2 regex(regexp);
+        std::string message = "ok";
+        return regex.ok() ? getPtr(message) : getPtr(regex.error());
     }
 }
