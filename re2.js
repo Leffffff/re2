@@ -15,6 +15,16 @@ const match = async (text, regex) => {
   });
 };
 
+const huinya = async (text, regex) => {
+  
+  return await RegExp2().then((re2) => {
+    const textAddress = stringOnWasmHeap(re2, text);
+    const regexAddress = stringOnWasmHeap(re2, regex);
+    freeUpMemory(re2, [textAddress, regexAddress]);
+
+  });
+};
+
 const check = async (text, regex) => {
   return await RegExp2().then((re2) => {
     const textAddress = stringOnWasmHeap(re2, text);
@@ -36,5 +46,5 @@ const stringOnWasmHeap = (module, string) => {
 };
 
 module.exports = {
-  match, check
+  match, check, huinya
 };

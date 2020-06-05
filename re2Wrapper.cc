@@ -8,16 +8,14 @@
 
 extern "C"
 {
+    //, char** outCapturedArray, int* outCapturedArraySize
+    void testFunc(char* inputString, char* inputRegex) {
+        re2::RE2 regex(inputRegex);
+        const int n = regex.NumberOfCapturingGroups();
+        const re2::RE2::Arg* outCapturedArray[n];
+        re2::RE2::PartialMatchN(inputString, regex, outCapturedArray, n);
 
-    // bool stringTestFunc2(char* inputString, char* inputRegex, char** outCapturedArray, int* outCapturedArraySize) {
-    //     re2::RE2 regex(inputRegex);
-    //     std::cout<< regex.NumberOfCapturingGroups() <<std::endl;
-    //     std::string captured;
-    //     re2::RE2::FullMatch(text,regex, &captured);
-    //     char* outString = new char[captured.length() + 1];
-    //     strcpy(outString, captured.c_str());
-    //     return outString; /
-    // }
+    }
 
     bool check(char *text, char *regex)
     {
