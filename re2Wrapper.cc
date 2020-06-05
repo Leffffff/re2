@@ -16,13 +16,13 @@ extern "C"
     }
 
     //, char** outCapturedArray, int* outCapturedArraySize
-    void testFunc(char *inputString, char *inputRegex)
-    {
-        re2::RE2 regex(inputRegex);
-        const int n = regex.NumberOfCapturingGroups();
-        const re2::RE2::Arg *outCapturedArray[n];
-        re2::RE2::PartialMatchN(inputString, regex, outCapturedArray, n);
-    }
+    // void testFunc(char *inputString, char *inputRegex)
+    // {
+    //     re2::RE2 regex(inputRegex);
+    //     const int n = regex.NumberOfCapturingGroups();
+    //     const re2::RE2::Arg *outCapturedArray[n];
+    //     re2::RE2::PartialMatchN(inputString, regex, outCapturedArray, n);
+    // }
 
     // , char **outCapturedArray, int *outCapturedArraySize
     // char **stringTestFunc2(char *inputString, char *inputRegex)
