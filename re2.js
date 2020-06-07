@@ -8,8 +8,8 @@ const stringOnWasmHeap = (module, string) => {
   return address;
 };
 
-const validate = async regex => await RegExp2().then((re2) => {
-  const regexAddress = stringOnWasmHeap(re2, regex);
+const validate = async regex => await RegExp2().then(async re2 => {
+  const regexAddress = await stringOnWasmHeap(re2, regex);
   const statusAddress = re2._validate(regexAddress);
   const status = re2.UTF8ToString(statusAddress);
 
@@ -19,7 +19,6 @@ const validate = async regex => await RegExp2().then((re2) => {
 });
 
 class RE2 {
-
   constructor(regex) {
     new Promise(async (resolve) => {
       this.regex = await validate(regex);
@@ -31,6 +30,8 @@ class RE2 {
     return await RegExp2().then((re2) => {
       const textAddress = stringOnWasmHeap(re2, text);
       const regexAddress = stringOnWasmHeap(re2, this.regex);
+      // const test = re2._testFunc(textAddress, regexAddress);
+      // console.log('INFO: ', re2.UTF8ToString(test));
 
       const matchedAddress = re2._singleMatch(textAddress, regexAddress);
       const matchedString = matchedAddress !== 0

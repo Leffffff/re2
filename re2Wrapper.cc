@@ -16,12 +16,22 @@ extern "C"
     }
 
     //, char** outCapturedArray, int* outCapturedArraySize
-    // void testFunc(char *inputString, char *inputRegex)
+    // const re2::RE2::Arg *const *testFunc(char *inputString, char *inputRegex)
     // {
     //     re2::RE2 regex(inputRegex);
     //     const int n = regex.NumberOfCapturingGroups();
-    //     const re2::RE2::Arg *outCapturedArray[n];
+    //     std::cout << n << std::endl;
+    //     re2::RE2::Arg();
+    //     // const re2::RE2::Arg *outCapturedArray[n]; //ppg
+    //     // const re2::RE2::Arg outCapturedArray(std::nullptr_t); //ppg
+    //     const re2::RE2::Arg *const *outCapturedArray = new re2::RE2::Arg const *[n]; //ppg
+    //     // const re2::RE2::Arg *const outCapturedArray = re2::RE2::Arg(); //ppg
+    //     std::cout << sizeof(outCapturedArray) << std::endl;
+
     //     re2::RE2::PartialMatchN(inputString, regex, outCapturedArray, n);
+    //     std::cout << *outCapturedArray[0] << std::endl;
+
+    //     return outCapturedArray;
     // }
 
     // , char **outCapturedArray, int *outCapturedArraySize
