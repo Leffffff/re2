@@ -38,7 +38,6 @@ extern "C"
         if(regex.error_code()){
             return nullptr;
         }
-        std::cout <<"INFO n"<< std::endl;
 
         int n = regex.NumberOfCapturingGroups();
         std::cout << "NumberOfCapturingGroups -> "<< n << std::endl;
@@ -53,25 +52,33 @@ extern "C"
             args[i] = &argv[i];  
             argv[i] = &ws[i]; 
         }  
-        std::cout <<"INFO: vect"<< std::endl;
-
-
-        if(!re2::RE2::PartialMatchN(inputString, inputRegex, args.data(), n)){
+        // re2::RE2::PartialMatchN(inputString, inputRegex, &(args[0]), n);  
+        // for (int i = 0; i < n; ++i){
+        //     std::cout << "ws[i] = " << ws[i] << std::endl << std::endl;
+        // }
+        if(!re2::RE2::PartialMatchN(inputString, inputRegex, &(args[0]), n)){
             std::cout <<"ERROR"<< std::endl;
             return nullptr;
         }  
-        std::cout <<"INFO: pM"<< std::endl;
 
         char** result = new char*[n];
         for (int i = 0; i < n; ++i) {
-            size_t size = ws[i].size();
-            result[i] = new char[size + 1];
+            const size_t size = ws[i].size();
+            std::cout << "result["<< i << "] size of result["<< i << "] is "<< size << std::endl;  
+            result[i] = new char[size];
             ws[i].copy(result[i], size);
+            const int govno = strlen(result[i]);
+            if(govno == size ){
+            std::cout <<"captured string is : '"<< result[i] <<"'"<< std::endl;
+            }else{
+            std::cout << "___ERROR____ -> result["<< i << "] length of result["<< i << "] is "<< govno << std::endl;    
+            }
             result[size] = 0;
+            std::cout <<"========================================================================================="<< std::endl;
         } 
-        std::cout <<"INFO: res"<< std::endl;
-
+        
         return result;
+        // return nullptr;
     }
 
     bool check(char *text, char *regex)
