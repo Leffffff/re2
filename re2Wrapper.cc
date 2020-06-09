@@ -33,53 +33,31 @@ extern "C"
 
     void* getCapturingGroups(char *inputString, char *inputRegex)
     {
-        std::cout <<"INFO"<< std::endl;
         re2::RE2 regex(inputRegex);
         if(regex.error_code()){
             return nullptr;
         }
-
         int n = regex.NumberOfCapturingGroups();
-        std::cout << "NumberOfCapturingGroups -> "<< n << std::endl;
-        if (n < 0) {
-            return nullptr;
-        }
 
-        std::vector<re2::RE2::Arg> argv(n);
+        std::vector<re2::RE2::Arg> argv(n); //need refactor 
         std::vector<re2::RE2::Arg*> args(n);  
         std::vector<re2::StringPiece> ws(n);  
         for (int i = 0; i < n; ++i) {  
             args[i] = &argv[i];  
             argv[i] = &ws[i]; 
         }  
-        // re2::RE2::PartialMatchN(inputString, inputRegex, &(args[0]), n);  
-        // for (int i = 0; i < n; ++i){
-        //     std::cout << "ws[i] = " << ws[i] << std::endl << std::endl;
-        // }
         if(!re2::RE2::PartialMatchN(inputString, inputRegex, &(args[0]), n)){
-            std::cout <<"ERROR"<< std::endl;
             return nullptr;
         }  
 
         char** result = new char*[n];
         for (int i = 0; i < n; ++i) {
-            const size_t size = ws[i].size();
-            std::cout << "result["<< i << "] size of result["<< i << "] is "<< size << std::endl;  
+            const size_t size = ws[i].size(); 
             result[i] = new char[size];
             ws[i].copy(result[i], size);
             result[i][size] = 0;
-            const int govno = strlen(result[i]);
-            if(govno == size ){
-            std::cout <<"captured string is : '"<< result[i] <<"'"<< std::endl;
-            }else{
-            std::cout << "___ERROR____ -> result["<< i << "] length of result["<< i << "] is "<< govno << std::endl;    
-            }
-            
-            std::cout <<"========================================================================================="<< std::endl;
         } 
-        
         return result;
-        // return nullptr;
     }
 
     bool check(char *text, char *regex)
