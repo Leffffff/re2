@@ -67,13 +67,14 @@ extern "C"
             std::cout << "result["<< i << "] size of result["<< i << "] is "<< size << std::endl;  
             result[i] = new char[size];
             ws[i].copy(result[i], size);
+            result[i][size] = 0;
             const int govno = strlen(result[i]);
             if(govno == size ){
             std::cout <<"captured string is : '"<< result[i] <<"'"<< std::endl;
             }else{
             std::cout << "___ERROR____ -> result["<< i << "] length of result["<< i << "] is "<< govno << std::endl;    
             }
-            result[size] = 0;
+            
             std::cout <<"========================================================================================="<< std::endl;
         } 
         
