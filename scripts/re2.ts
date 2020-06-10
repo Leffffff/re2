@@ -12,12 +12,7 @@ const stringOnWasmHeap = (module: Module, string: string): Address => {
 };
 
 const validate = async (regex: string): Promise<string> =>
-  await RegExp2().then(async (re2: Module) => {
-    regex === undefined &&
-      console.log(
-        'INFO: problem with "length of undefined"; regex -> is ',
-        regex
-      );
+  await RegExp2().then((re2: Module) => {
     const regexAddress = stringOnWasmHeap(re2, regex);
     const statusAddress = re2._validate(regexAddress);
     const status = re2.UTF8ToString(statusAddress);
@@ -59,12 +54,12 @@ export class RE2 {
       for (let i = 0; i < captureGroups; ++i) {
         const stringPtr = re2._getStringPtrByIndex(arrayPtr, i);
         const string = re2.UTF8ToString(stringPtr);
+        // console.log("RE2(match) -> string length is", string.length)
+        // console.log("RE2(match) -> string", string)
         arr.push(string);
       }
 
-      re2._clearArray(arrayPtr, captureGroups);
       freeUpMemory(re2, [textAddress, regexAddress, arrayPtr]);
-
       return arr;
     });
   };
@@ -83,6 +78,20 @@ export class RE2 {
     });
   };
 
+  replace = async (text: string, rewrite: string, flag?: string): Promise<string> => {
+    return await RegExp2().then((re2: Module) => {
+      const textAddress = stringOnWasmHeap(re2, text);
+      const flagAddress = stringOnWasmHeap(re2, flag || '');
+      const rewriteAddress = stringOnWasmHeap(re2, rewrite);
+      const regexAddress = stringOnWasmHeap(re2, this.regex);
+
+      const replacedStringAddress = re2._replace(textAddress, regexAddress, rewriteAddress, flagAddress);
+      const replacedString = re2.UTF8ToString(replacedStringAddress);
+
+      freeUpMemory(re2, [textAddress, regexAddress, rewriteAddress, replacedStringAddress, flagAddress]);
+      return replacedString;
+    });
+  };
   test = async (text: string): Promise<boolean> => {
     return await RegExp2().then((re2: Module) => {
       const textAddress = stringOnWasmHeap(re2, text);

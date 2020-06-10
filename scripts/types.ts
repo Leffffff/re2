@@ -25,7 +25,7 @@ type Module = {
   /** @function _getStringPtrByIndex : returns address of array element by index. */
   _getStringPtrByIndex(arrayA: Address, index: number): Address;
 
-  /** @function _clearArray : clears pointer array. (will be depricated) */
+  /** @function _clearArray : clears pointer array. (will be depricated) (We think this function is similiar to _free) */
   _clearArray(arrayA: Address, n: number): void;
 
   /** @function _singleMatch : returns address of matched string by single capture string */
@@ -33,4 +33,7 @@ type Module = {
 
   /** @function _check : returns boolean if regex matches string */
   _check(textA: Address, reA: Address): 0 | 1;
+
+   /** @function _replace : return with some or all matches of a pattern replaced by a replacement  */
+  _replace(basicA: Address, fromA: Address, toA: Address, flagA: Address): Address;
 };

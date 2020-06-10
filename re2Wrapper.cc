@@ -56,6 +56,10 @@ extern "C"
             result[i] = new char[size];
             ws[i].copy(result[i], size);
             result[i][size] = 0;
+
+            // std::printf("Printf prints  %s\n", result[i]);
+            // std::cout<<"length is "<< std::strlen(result[i]) <<"; result["<< i << "] = "<< result[i]<<std::endl;
+            // getStringLength(result[i]);
         } 
         return result;
     }
@@ -63,6 +67,16 @@ extern "C"
     bool check(char *text, char *regex)
     {
         return re2::RE2::PartialMatch(text, regex);
+    }
+
+    char* replace(char *text, char* regex, char* rewrite, char* flag) {
+        std::string replacedString = text;
+        if (*flag == 'g') {
+            re2::RE2::GlobalReplace(&replacedString, regex, rewrite);
+        } else {
+            re2::RE2::Replace(&replacedString, regex, rewrite);
+        }
+        return getPtr(replacedString);
     }
 
     char *singleMatch(char *text, char *regex)
