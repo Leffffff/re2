@@ -58,10 +58,8 @@ export class RE2 {
       const arr: string[] = [];
       for (let i = 0; i < captureGroups; ++i) {
         const stringPtr = re2._getStringPtrByIndex(arrayPtr, i);
-        console.log("RE2 -> stringPtr", stringPtr.toString(16))
         const string = re2.UTF8ToString(stringPtr);
-        console.log("RE2(match) -> string length is", string.length)
-        console.log("RE2(match) -> string", string)
+        freeUpMemory(re2, [stringPtr]);
         arr.push(string);
       }
 

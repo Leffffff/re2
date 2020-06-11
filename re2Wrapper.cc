@@ -5,19 +5,19 @@
 #include <vector>
 #include <iostream>
 
-// em++ re2Wrapper.cc src/re2.cc src/filtered_re2.cc src/prefilter_tree.cc src/regexp.cc src/stringpiece.cc src/unicode_*.cc src/perl_groups.cc src/parse.cc src/rune.cc src/simplify.cc src/compile.cc src/prog.cc src/nfa.cc src/onepass.cc src/prefilter.cc src/dfa.cc src/bitstate.cc src/tostring.cc -o re2Lib.js -s LINKABLE=1 -s EXPORT_ALL=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["stringToUTF8", "UTF8ToString"]' -s MODULARIZE=1 -s 'EXPORT_NAME="RegExp2"' -O3
+// em++ re2Wrapper.cc src/re2.cc src/filtered_re2.cc src/prefilter_tree.cc src/regexp.cc src/stringpiece.cc src/unicode_*.cc src/perl_groups.cc src/parse.cc src/rune.cc src/simplify.cc src/compile.cc src/prog.cc src/nfa.cc src/onepass.cc src/prefilter.cc src/dfa.cc src/bitstate.cc src/tostring.cc -o re2Lib.js -s LINKABLE=1 -s EXPORT_ALL=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["stringToUTF8", "UTF8ToString"]' -s MODULARIZE=1 -s 'EXPORT_NAME="RegExp2"'
 
 extern "C"
 {
-    char *getPtr(std::string message)
+    char* getPtr(const std::string &message)
     {
-        char *m = new char[message.length() + 1];
+        char* m = new char[message.length() + 1];
         strcpy(m, message.c_str());
         return m;
     }
 
-    int getNumberOfCapturingGroups(char *inputRegex){
-        return re2::RE2(inputRegex).NumberOfCapturingGroups();   
+    int getNumberOfCapturingGroups(char* inputRegex){
+        return re2::RE2(inputRegex).NumberOfCapturingGroups();
     }
 
     char* getStringPtrByIndex(char** stringArray, int index){
@@ -26,12 +26,12 @@ extern "C"
 
     void clearArray(char** stringArray, int size){
         for (int i = 0; i < size; ++i) {
-            delete stringArray[i];
-        }   
-        delete[] stringArray;  
+            delete[] stringArray[i];
+        }
+        delete[] stringArray;
     }
 
-    void* getCapturingGroups(char *inputString, char *inputRegex) //, int **arrayLength
+    void* getCapturingGroups(char *inputString, char *inputRegex)
     {
         re2::RE2 regex(inputRegex);
         if(regex.error_code()){
@@ -39,38 +39,32 @@ extern "C"
         }
         int n = regex.NumberOfCapturingGroups();
 
-        std::vector<re2::RE2::Arg> argv(n); //need refactor 
-        std::vector<re2::RE2::Arg*> args(n);  
-        std::vector<re2::StringPiece> ws(n);  
-        for (int i = 0; i < n; ++i) {  
-            args[i] = &argv[i];  
-            argv[i] = &ws[i]; 
-        }  
+        std::vector<re2::RE2::Arg> argv(n); //need refactor
+        std::vector<re2::RE2::Arg*> args(n);
+        std::vector<re2::StringPiece> ws(n);
+        for (int i = 0; i < n; ++i) {
+            args[i] = &argv[i];
+            argv[i] = &ws[i];
+        }
         if(!re2::RE2::PartialMatchN(inputString, inputRegex, &(args[0]), n)){
             return nullptr;
-        }  
-        // arrayLength = new int*[n];
+        }
         char** result = new char*[n];
         for (int i = 0; i < n; ++i) {
             const size_t size = ws[i].size();
-            result[i] = new char[size];
-            // arrayLength[i] = new int[size];
+            result[i] = new char[size + 1];
             ws[i].copy(result[i], size);
-            result[i][size] = 0;
-            // std::cout<<"length is "<< std::strlen(result[i]) <<"; result["<< i << "] = "<< result[i]<<std::endl;
-            // printf("\nElement %d:\t%p\n",i,&result[i]);
-
-            // ((*arrayLength)[i]) = std::strlen(result[i]);
-        } 
+            result[i][size] = '\0';
+        }
         return result;
     }
 
-    bool check(char *text, char *regex)
+    bool check(char* text, char *regex)
     {
         return re2::RE2::PartialMatch(text, regex);
     }
 
-    char* replace(char *text, char* regex, char* rewrite, char* flag) {
+    char* replace(char* text, char* regex, char* rewrite, char* flag) {
         std::string replacedString = text;
         if (*flag == 'g') {
             re2::RE2::GlobalReplace(&replacedString, regex, rewrite);
@@ -80,7 +74,7 @@ extern "C"
         return getPtr(replacedString);
     }
 
-    char *singleMatch(char *text, char *regex)
+    char* singleMatch(char *text, char *regex)
     {
         if (check(text, regex))
         {
@@ -94,7 +88,7 @@ extern "C"
         }
     }
 
-    char *validate(char *regexp)
+    char* validate(char *regexp)
     {
         re2::RE2 regex(regexp);
         std::string message = "ok";
