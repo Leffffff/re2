@@ -42,7 +42,7 @@ export class RE2 {
     return await RegExp2().then((re2: Module) => {
       const textAddress = stringOnWasmHeap(re2, text);
       const regexAddress = stringOnWasmHeap(re2, this.regex);
-
+      
       const captureGroups = re2._getNumberOfCapturingGroups(regexAddress);
       if (captureGroups < 0) throw Error('Error with groups');
 
@@ -52,14 +52,16 @@ export class RE2 {
       }
 
       const arrayPtr = re2._getCapturingGroups(textAddress, regexAddress);
+
       if (arrayPtr === 0) return null; // no matched string
 
       const arr: string[] = [];
       for (let i = 0; i < captureGroups; ++i) {
         const stringPtr = re2._getStringPtrByIndex(arrayPtr, i);
+        console.log("RE2 -> stringPtr", stringPtr.toString(16))
         const string = re2.UTF8ToString(stringPtr);
-        // console.log("RE2(match) -> string length is", string.length)
-        // console.log("RE2(match) -> string", string)
+        console.log("RE2(match) -> string length is", string.length)
+        console.log("RE2(match) -> string", string)
         arr.push(string);
       }
 

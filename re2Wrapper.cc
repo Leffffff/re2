@@ -31,7 +31,7 @@ extern "C"
         delete[] stringArray;  
     }
 
-    void* getCapturingGroups(char *inputString, char *inputRegex)
+    void* getCapturingGroups(char *inputString, char *inputRegex) //, int **arrayLength
     {
         re2::RE2 regex(inputRegex);
         if(regex.error_code()){
@@ -49,17 +49,18 @@ extern "C"
         if(!re2::RE2::PartialMatchN(inputString, inputRegex, &(args[0]), n)){
             return nullptr;
         }  
-
+        // arrayLength = new int*[n];
         char** result = new char*[n];
         for (int i = 0; i < n; ++i) {
-            const size_t size = ws[i].size(); 
+            const size_t size = ws[i].size();
             result[i] = new char[size];
+            // arrayLength[i] = new int[size];
             ws[i].copy(result[i], size);
             result[i][size] = 0;
-
-            // std::printf("Printf prints  %s\n", result[i]);
             // std::cout<<"length is "<< std::strlen(result[i]) <<"; result["<< i << "] = "<< result[i]<<std::endl;
-            // getStringLength(result[i]);
+            // printf("\nElement %d:\t%p\n",i,&result[i]);
+
+            // ((*arrayLength)[i]) = std::strlen(result[i]);
         } 
         return result;
     }
