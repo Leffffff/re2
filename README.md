@@ -46,7 +46,15 @@ em++ re2Wrapper.cc src/re2.cc src/filtered_re2.cc src/prefilter_tree.cc src/rege
 
 `npm test`
 
-### If google-re2 module is updated then run this script to update javascript package
+### Updating re2 to latest
+
+#### If google-re2 module is updated
+
+```bash
+git pull --recurse-submodules
+```
+
+#### Then run this script to update re2 package
 
 ```bash
 npm run build:update

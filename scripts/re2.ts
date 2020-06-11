@@ -23,7 +23,7 @@ const validate = async (regex: string): Promise<string> =>
   });
 
 export class RE2 {
-  regex!: string;
+  private regex!: string;
   constructor(regex: string) {
     new Promise(async resolve => {
       this.regex = await validate(regex);
@@ -31,24 +31,28 @@ export class RE2 {
     });
   }
 
+  numberOfCaptureGroups = async (): Promise<void> => {
+    return await RegExp2().then((re2: Module) => {
+      const regexAddress = stringOnWasmHeap(re2, this.regex);
+      return re2._getNumberOfCapturingGroups(regexAddress);
+    });
+  };
+
   match = async (text: string): Promise<string[]> => {
     return await RegExp2().then((re2: Module) => {
       const textAddress = stringOnWasmHeap(re2, text);
       const regexAddress = stringOnWasmHeap(re2, this.regex);
 
       const captureGroups = re2._getNumberOfCapturingGroups(regexAddress);
-      if (captureGroups < 0) {
-        console.log('Error with groups');
-      }
+      if (captureGroups < 0) throw Error('Error with groups');
+
       if (captureGroups === 0) {
         console.log("Regex doesn't have capture group(s)");
         return null;
       }
 
       const arrayPtr = re2._getCapturingGroups(textAddress, regexAddress);
-      if (arrayPtr === 0) {
-        console.log('Captured array pointer error');
-      }
+      if (arrayPtr === 0) return null; // no matched string
 
       const arr: string[] = [];
       for (let i = 0; i < captureGroups; ++i) {
@@ -78,20 +82,37 @@ export class RE2 {
     });
   };
 
-  replace = async (text: string, rewrite: string, flag?: string): Promise<string> => {
+  static replace = async (
+    baseText: string,
+    regex: string,
+    rewrite: string,
+    flag?: string
+  ): Promise<string> => {
     return await RegExp2().then((re2: Module) => {
-      const textAddress = stringOnWasmHeap(re2, text);
+      const textAddress = stringOnWasmHeap(re2, baseText);
       const flagAddress = stringOnWasmHeap(re2, flag || '');
       const rewriteAddress = stringOnWasmHeap(re2, rewrite);
-      const regexAddress = stringOnWasmHeap(re2, this.regex);
+      const regexAddress = stringOnWasmHeap(re2, regex);
 
-      const replacedStringAddress = re2._replace(textAddress, regexAddress, rewriteAddress, flagAddress);
+      const replacedStringAddress = re2._replace(
+        textAddress,
+        regexAddress,
+        rewriteAddress,
+        flagAddress
+      );
       const replacedString = re2.UTF8ToString(replacedStringAddress);
 
-      freeUpMemory(re2, [textAddress, regexAddress, rewriteAddress, replacedStringAddress, flagAddress]);
+      freeUpMemory(re2, [
+        textAddress,
+        regexAddress,
+        rewriteAddress,
+        replacedStringAddress,
+        flagAddress,
+      ]);
       return replacedString;
     });
   };
+
   test = async (text: string): Promise<boolean> => {
     return await RegExp2().then((re2: Module) => {
       const textAddress = stringOnWasmHeap(re2, text);
