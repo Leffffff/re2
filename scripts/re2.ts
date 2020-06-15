@@ -73,10 +73,8 @@ export class RE2 {
       return arr;
     });
 
-  private globalMatch = async (
-    module: Module,
-    text: string
-  ): Promise<string[][] | null> => {
+  private globalMatch = (module: Module, text: string): string[][] | null => {
+    const rejs = new RegExp(this.regex);
     const gArr = [];
     const [regexPointer] = getPointers(module, this.regex);
 
@@ -85,7 +83,7 @@ export class RE2 {
 
     let [textPointer] = getPointers(module, text);
 
-    while (await this.test(text)) {
+    while (rejs.test(text)) {
       textPointer = getPointers(module, text)[0];
       if (captureGroups === 0) {
         console.log("Regex doesn't have capture group(s)");
@@ -108,7 +106,6 @@ export class RE2 {
         text.indexOf(arr[arr.length - 1]) + arr[arr.length - 1].length;
       text = text.slice(pos);
       freeUpMemory(module, arrayPtr);
-      // module._clearArray(arrayPtr, captureGroups);
     }
     freeUpMemory(module, regexPointer, textPointer);
     return gArr;
