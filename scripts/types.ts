@@ -20,19 +20,19 @@ type Module = {
   _getNumberOfCapturingGroups(ptr: Pointer): number;
 
   /** @function _getCapturingGroups : returns address to array of groups. */
-  _getCapturingGroups(textPtr: Pointer, rePtr: Pointer): Pointer;
+  _getCapturingGroups(sPtr: Pointer, rePtr: Pointer): Pointer;
 
   /** @function _getStringPtrByIndex : returns address of array element by index. */
   _getStringPtrByIndex(arrayPtr: Pointer, index: number): Pointer;
 
-  /** @function _clearArray : clears pointer array. (will be depricated) (We think this function is similiar to _free) */
+  /** @function _clearArray : clears pointer array. (experimental/deprecated) (We think this function is similiar to _free) */
   _clearArray(arrayPtr: Pointer, n: number): void;
 
-  /** @function _singleMatch : returns address of matched string by single capture string. */
-  _singleMatch(textPtr: Pointer, rePtr: Pointer): Pointer;
+  /** @function _singleMatch : returns address of matched string by single capture string. (experimental/deprecated) */
+  _singleMatch(sPtr: Pointer, rePtr: Pointer): Pointer;
 
   /** @function _check : returns boolean if regex matches string. */
-  _check(textPtr: Pointer, rePtr: Pointer): 0 | 1;
+  _check(sPtr: Pointer, rePtr: Pointer): 0 | 1;
 
   /** @function _replace : return new string with some or all matches of a pattern replaced by a replacement. */
   _replace(
@@ -41,4 +41,18 @@ type Module = {
     toPtr: Pointer,
     flagPtr: Pointer
   ): Pointer;
+};
+
+type ReplaceParams = 'baseText' | 'regex' | 'rewrite' | 'flag';
+
+type ReplaceInput = {
+  module: Module;
+} & {
+  [k in ReplaceParams]: string;
+};
+
+type RE2 = {
+  numberOfCaptureGroups(): Promise<void>;
+  test(s: string): Promise<boolean>;
+  exec(s: string): Promise<string[] | string[][]>;
 };
