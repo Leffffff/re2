@@ -1,49 +1,50 @@
-import { resolve } from 'path';
-const path = resolve(__dirname, '../../re2Lib');
-const RegExp2 = require(path);
+const RegExp2 = require('../../re2Lib');
 
-const freeUpMemory = (module: Module, ptrs: Address[]): void =>
+const freeUpMemory = (module: Module, ...ptrs: Pointer[]): void =>
   ptrs.forEach(module._free);
 
-const stringOnWasmHeap = (module: Module, string: string): Address => {
-  const address = module._malloc(string.length + 1);
-  module.stringToUTF8(string, address, string.length + 1);
-  return address;
+const stringOnWasmHeap = (module: Module) => (string: string): Pointer => {
+  const ptr = module._malloc(string.length + 1);
+  module.stringToUTF8(string, ptr, string.length + 1);
+  return ptr;
 };
 
-const validate = async (regex: string): Promise<string> =>
-  await RegExp2().then((re2: Module) => {
-    const regexAddress = stringOnWasmHeap(re2, regex);
-    const statusAddress = re2._validate(regexAddress);
-    const status = re2.UTF8ToString(statusAddress);
-
-    if (status !== 'ok') throw Error(status);
-    freeUpMemory(re2, [regexAddress, statusAddress]);
-    return regex;
-  });
+const getPointers = (module: Module, ...values: string[]): Pointer[] =>
+  values.map(stringOnWasmHeap(module));
 
 export class RE2 {
   private regex!: string;
+
   constructor(regex: string) {
     new Promise(async resolve => {
-      this.regex = await validate(regex);
+      await this.validate(regex);
+      this.regex = regex;
       resolve(this);
     });
   }
 
-  numberOfCaptureGroups = async (): Promise<void> => {
-    return await RegExp2().then((re2: Module) => {
-      const regexAddress = stringOnWasmHeap(re2, this.regex);
-      return re2._getNumberOfCapturingGroups(regexAddress);
-    });
-  };
+  private validate = async (regex: string): Promise<void> =>
+    await RegExp2().then((re2: Module) => {
+      const [regexPointer] = getPointers(re2, regex);
+      const statusPointer = re2._validate(regexPointer);
+      const status = re2.UTF8ToString(statusPointer);
 
-  match = async (text: string): Promise<string[]> => {
-    return await RegExp2().then((re2: Module) => {
-      const textAddress = stringOnWasmHeap(re2, text);
-      const regexAddress = stringOnWasmHeap(re2, this.regex);
-      
-      const captureGroups = re2._getNumberOfCapturingGroups(regexAddress);
+      if (status !== 'ok') throw Error(status);
+      freeUpMemory(re2, regexPointer, statusPointer);
+    });
+
+  numberOfCaptureGroups = async (): Promise<void> =>
+    await RegExp2().then((re2: Module) => {
+      const [regexPointer] = getPointers(re2, this.regex);
+      return re2._getNumberOfCapturingGroups(regexPointer);
+    });
+
+  match = async (text: string): Promise<string[]> =>
+    await RegExp2().then((re2: Module) => {
+      console.log(this.regex);
+      const [textPointer, regexPointer] = getPointers(re2, text, this.regex);
+
+      const captureGroups = re2._getNumberOfCapturingGroups(regexPointer);
       if (captureGroups < 0) throw Error('Error with groups');
 
       if (captureGroups === 0) {
@@ -51,7 +52,7 @@ export class RE2 {
         return null;
       }
 
-      const arrayPtr = re2._getCapturingGroups(textAddress, regexAddress);
+      const arrayPtr = re2._getCapturingGroups(textPointer, regexPointer);
 
       if (arrayPtr === 0) return null; // no matched string
 
@@ -59,69 +60,66 @@ export class RE2 {
       for (let i = 0; i < captureGroups; ++i) {
         const stringPtr = re2._getStringPtrByIndex(arrayPtr, i);
         const string = re2.UTF8ToString(stringPtr);
-        freeUpMemory(re2, [stringPtr]);
+        freeUpMemory(re2, stringPtr);
         arr.push(string);
       }
 
-      freeUpMemory(re2, [textAddress, regexAddress, arrayPtr]);
+      freeUpMemory(re2, textPointer, regexPointer, arrayPtr);
       return arr;
     });
-  };
 
-  exec = async (text: string): Promise<string> => {
-    return await RegExp2().then((re2: Module) => {
-      const textAddress = stringOnWasmHeap(re2, text);
-      const regexAddress = stringOnWasmHeap(re2, this.regex);
+  exec = async (text: string): Promise<string> =>
+    await RegExp2().then((re2: Module) => {
+      const [textPointer, regexPointer] = getPointers(re2, text, this.regex);
 
-      const matchedAddress = re2._singleMatch(textAddress, regexAddress);
+      const matchedPointer = re2._singleMatch(textPointer, regexPointer);
       const matchedString =
-        matchedAddress !== 0 ? re2.UTF8ToString(matchedAddress) : null;
+        matchedPointer !== 0 ? re2.UTF8ToString(matchedPointer) : null;
 
-      freeUpMemory(re2, [textAddress, regexAddress, matchedAddress]);
+      freeUpMemory(re2, textPointer, regexPointer, matchedPointer);
       return matchedString;
     });
-  };
 
   static replace = async (
     baseText: string,
     regex: string,
     rewrite: string,
     flag?: string
-  ): Promise<string> => {
-    return await RegExp2().then((re2: Module) => {
-      const textAddress = stringOnWasmHeap(re2, baseText);
-      const flagAddress = stringOnWasmHeap(re2, flag || '');
-      const rewriteAddress = stringOnWasmHeap(re2, rewrite);
-      const regexAddress = stringOnWasmHeap(re2, regex);
+  ): Promise<string> =>
+    await RegExp2().then((re2: Module) => {
+      const [
+        textPointer,
+        regexPointer,
+        flagPointer,
+        rewritePointer,
+      ] = getPointers(re2, baseText, regex, flag || '', rewrite);
 
-      const replacedStringAddress = re2._replace(
-        textAddress,
-        regexAddress,
-        rewriteAddress,
-        flagAddress
+      const replacedStringPointer = re2._replace(
+        textPointer,
+        regexPointer,
+        rewritePointer,
+        flagPointer
       );
-      const replacedString = re2.UTF8ToString(replacedStringAddress);
+      const replacedString = re2.UTF8ToString(replacedStringPointer);
 
-      freeUpMemory(re2, [
-        textAddress,
-        regexAddress,
-        rewriteAddress,
-        replacedStringAddress,
-        flagAddress,
-      ]);
+      freeUpMemory(
+        re2,
+        textPointer,
+        regexPointer,
+        rewritePointer,
+        replacedStringPointer,
+        flagPointer
+      );
       return replacedString;
     });
-  };
 
-  test = async (text: string): Promise<boolean> => {
-    return await RegExp2().then((re2: Module) => {
-      const textAddress = stringOnWasmHeap(re2, text);
-      const regexAddress = stringOnWasmHeap(re2, this.regex);
+  test = async (text: string): Promise<boolean> =>
+    await RegExp2().then((re2: Module) => {
+      const [textPointer, regexPointer] = getPointers(re2, text, this.regex);
 
-      const isFulfilled = !!re2._check(textAddress, regexAddress);
+      const isFulfilled = !!re2._check(textPointer, regexPointer);
 
-      freeUpMemory(re2, [textAddress, regexAddress]);
+      freeUpMemory(re2, textPointer, regexPointer);
       return isFulfilled;
     });
-  };
 }

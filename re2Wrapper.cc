@@ -9,48 +9,54 @@
 
 extern "C"
 {
-    char* getPtr(const std::string &message)
+    char *getPtr(const std::string &message)
     {
-        char* m = new char[message.length() + 1];
+        char *m = new char[message.length() + 1];
         strcpy(m, message.c_str());
         return m;
     }
 
-    int getNumberOfCapturingGroups(char* inputRegex){
+    int getNumberOfCapturingGroups(char *inputRegex)
+    {
         return re2::RE2(inputRegex).NumberOfCapturingGroups();
     }
 
-    char* getStringPtrByIndex(char** stringArray, int index){
+    char *getStringPtrByIndex(char **stringArray, int index)
+    {
         return stringArray[index];
     }
 
-    void clearArray(char** stringArray, int size){
-        for (int i = 0; i < size; ++i) {
+    void clearArray(char **stringArray, int size)
+    {
+        for (int i = 0; i < size; ++i)
+        {
             delete[] stringArray[i];
         }
         delete[] stringArray;
     }
 
-    void* getCapturingGroups(char *inputString, char *inputRegex)
+    void *getCapturingGroups(char *inputString, char *inputRegex)
     {
         re2::RE2 regex(inputRegex);
-        if(regex.error_code()){
+        if (regex.error_code())
             return nullptr;
-        }
         int n = regex.NumberOfCapturingGroups();
 
         std::vector<re2::RE2::Arg> argv(n); //need refactor
-        std::vector<re2::RE2::Arg*> args(n);
+        std::vector<re2::RE2::Arg *> args(n);
         std::vector<re2::StringPiece> ws(n);
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; ++i)
+        {
             args[i] = &argv[i];
             argv[i] = &ws[i];
         }
-        if(!re2::RE2::PartialMatchN(inputString, inputRegex, &(args[0]), n)){
+        if (!re2::RE2::PartialMatchN(inputString, inputRegex, &(args[0]), n))
+        {
             return nullptr;
         }
-        char** result = new char*[n];
-        for (int i = 0; i < n; ++i) {
+        char **result = new char *[n];
+        for (int i = 0; i < n; ++i)
+        {
             const size_t size = ws[i].size();
             result[i] = new char[size + 1];
             ws[i].copy(result[i], size);
@@ -59,22 +65,21 @@ extern "C"
         return result;
     }
 
-    bool check(char* text, char *regex)
+    bool check(char *text, char *regex)
     {
         return re2::RE2::PartialMatch(text, regex);
     }
 
-    char* replace(char* text, char* regex, char* rewrite, char* flag) {
+    char *replace(char *text, char *regex, char *rewrite, char *flag)
+    {
         std::string replacedString = text;
-        if (*flag == 'g') {
+        if (*flag == 'g')
             re2::RE2::GlobalReplace(&replacedString, regex, rewrite);
-        } else {
-            re2::RE2::Replace(&replacedString, regex, rewrite);
-        }
+        re2::RE2::Replace(&replacedString, regex, rewrite);
         return getPtr(replacedString);
     }
 
-    char* singleMatch(char *text, char *regex)
+    char *singleMatch(char *text, char *regex)
     {
         if (check(text, regex))
         {
@@ -84,11 +89,11 @@ extern "C"
         }
         else
         {
-            return 0;
+            return nullptr;
         }
     }
 
-    char* validate(char *regexp)
+    char *validate(char *regexp)
     {
         re2::RE2 regex(regexp);
         std::string message = "ok";
