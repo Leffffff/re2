@@ -45,15 +45,18 @@ extern "C"
         std::vector<re2::RE2::Arg> argv(n); //need refactor
         std::vector<re2::RE2::Arg *> args(n);
         std::vector<re2::StringPiece> ws(n);
+
         for (int i = 0; i < n; ++i)
         {
             args[i] = &argv[i];
             argv[i] = &ws[i];
         }
+
         if (!re2::RE2::PartialMatchN(inputString, inputRegex, &(args[0]), n))
         {
             return nullptr;
         }
+
         char **result = new char *[n];
         for (int i = 0; i < n; ++i)
         {

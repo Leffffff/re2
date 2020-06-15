@@ -39,9 +39,14 @@ export class RE2 {
       return re2._getNumberOfCapturingGroups(regexPointer);
     });
 
-  match = async (text: string): Promise<string[]> =>
-    await RegExp2().then((re2: Module) => {
+  match = async (text: string, flag?: string): Promise<string[] | string[][]> =>
+    await RegExp2().then(async (re2: Module) => {
       console.log(this.regex);
+      if (flag === 'g') {
+        const gArr = await this.globalMatch(re2, text);
+        console.log(gArr && gArr.length);
+        return gArr;
+      }
       const [textPointer, regexPointer] = getPointers(re2, text, this.regex);
 
       const captureGroups = re2._getNumberOfCapturingGroups(regexPointer);
@@ -67,6 +72,47 @@ export class RE2 {
       freeUpMemory(re2, textPointer, regexPointer, arrayPtr);
       return arr;
     });
+
+  private globalMatch = async (
+    module: Module,
+    text: string
+  ): Promise<string[][] | null> => {
+    const gArr = [];
+    const [regexPointer] = getPointers(module, this.regex);
+
+    const captureGroups = module._getNumberOfCapturingGroups(regexPointer);
+    if (captureGroups < 0) throw Error('Error with groups');
+
+    let [textPointer] = getPointers(module, text);
+
+    while (await this.test(text)) {
+      textPointer = getPointers(module, text)[0];
+      if (captureGroups === 0) {
+        console.log("Regex doesn't have capture group(s)");
+        return null;
+      }
+
+      const arrayPtr = module._getCapturingGroups(textPointer, regexPointer);
+
+      if (arrayPtr === 0) return null; // no matched string
+
+      const arr: string[] = [];
+      for (let i = 0; i < captureGroups; ++i) {
+        const stringPtr = module._getStringPtrByIndex(arrayPtr, i);
+        const string = module.UTF8ToString(stringPtr);
+        freeUpMemory(module, stringPtr);
+        arr.push(string);
+      }
+      gArr.push(arr);
+      const pos =
+        text.indexOf(arr[arr.length - 1]) + arr[arr.length - 1].length;
+      text = text.slice(pos);
+      freeUpMemory(module, arrayPtr);
+      // module._clearArray(arrayPtr, captureGroups);
+    }
+    freeUpMemory(module, regexPointer, textPointer);
+    return gArr;
+  };
 
   exec = async (text: string): Promise<string> =>
     await RegExp2().then((re2: Module) => {
