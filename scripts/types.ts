@@ -55,4 +55,5 @@ type RE2 = {
   numberOfCaptureGroups(): Promise<void>;
   test(s: string): Promise<boolean>;
   exec(s: string): Promise<string[] | string[][] | null>;
+  replace(s: string, rewrite: string): string;
 };

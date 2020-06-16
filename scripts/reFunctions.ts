@@ -34,20 +34,19 @@ export const globalExec = (
   const position = getPosition(groups);
 
   let [textPointer] = getPointers(module, text);
-  const rejs = new RegExp(regex);
   const gArr = [];
 
-  while (rejs.test(text)) {
+  while (true) {
     textPointer = getPointers(module, text)[0];
     const arrayPointer = module._getCapturingGroups(textPointer, regexPointer);
-    if (arrayPointer === 0) return null; // no matched string
+    if (arrayPointer === 0) break;
 
     const arr = getStringsFromPointerArray(module, arrayPointer, captureGroups);
     gArr.push(arr);
     text = text.slice(position(text, arr));
   }
   freeUpMemory(module, regexPointer, textPointer);
-  return gArr;
+  return gArr[0] ? gArr : null;
 };
 
 export const exec = (

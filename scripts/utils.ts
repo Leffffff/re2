@@ -12,27 +12,6 @@ export const stringOnWasmHeap = (module: Module) => (
 export const getPointers = (module: Module, ...values: string[]): Pointer[] =>
   values.map(stringOnWasmHeap(module));
 
-export const getGroups = (module: Module, regexPointer: Pointer, captureGroups: number): string[] => {
-  const repeat = `(.+?)\\(.+?\\)`.repeat(captureGroups);
-  const [repeatP] = getPointers(module, repeat);
-  const arrayPointer = module._getCapturingGroups(regexPointer, repeatP);
-  const arr = getStringsFromPointerArray(module, arrayPointer, captureGroups);
-  freeUpMemory(module, repeatP)
-  return arr;
-};
-
-export const getPosition = (groups: string[]) => (
-  text: string,
-  array: string[]
-): number => {
-  const foundString = groups.map((el, i) => el + array[i]).join('');
-  const stringToDelete = (new RegExp(foundString).exec(
-    text
-  ) as RegExpExecArray)[0];
-  const pos = text.indexOf(stringToDelete);
-  return pos + stringToDelete.length;
-};
-
 export const getStringsFromPointerArray = (
   module: Module,
   arrayPointer: number,
@@ -47,6 +26,31 @@ export const getStringsFromPointerArray = (
   }
   freeUpMemory(module, arrayPointer);
   return arr || [];
+};
+
+export const getGroups = (
+  module: Module,
+  regexPointer: Pointer,
+  captureGroups: number
+): string[] => {
+  const repeat = `(.+?)\\(.+?\\)`.repeat(captureGroups);
+  const [repeatP] = getPointers(module, repeat);
+  const arrayPointer = module._getCapturingGroups(regexPointer, repeatP);
+  const arr = getStringsFromPointerArray(module, arrayPointer, captureGroups);
+  freeUpMemory(module, repeatP);
+  return arr;
+};
+
+export const getPosition = (groups: string[]) => (
+  text: string,
+  array: string[]
+): number => {
+  const foundString = groups.map((el, i) => el + array[i]).join('');
+  const stringToDelete = (new RegExp(foundString).exec(
+    text
+  ) as RegExpExecArray)[0];
+  const pos = text.indexOf(stringToDelete);
+  return pos + stringToDelete.length;
 };
 
 export const validation = (module: Module, regex: string): void => {

@@ -8,19 +8,18 @@ import RE2 from '../scripts/re2';
 
   const refun = await RE2(regex, 'g');
 
-  const isMatch = await refun.test(text);
+  const isMatch = refun.test(text);
   console.log('INFO: test -> ', isMatch);
 
-  const matched = await refun.exec(text);
+  const matched = refun.exec(text);
   console.log('INFO: exec -> ', matched);
 
   const text2 =
     'yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo';
-  console.log(
-    'INFO: replace -> ',
-    await RE2.replace(text2, '(\\w+?)&.+?&(\\w+)', '\\2 \\1', 'g')
-  );
+  const reRepl = await RE2('(\\w+?)&.+?&(\\w+)', 'g');
 
-  const n = await refun.numberOfCaptureGroups();
+  console.log('INFO: replace -> ', reRepl.replace(text2, '\\2 \\1'));
+
+  const n = refun.numberOfCaptureGroups();
   console.log('INFO: numberOfCaptureGroups -> ', n);
 })();
