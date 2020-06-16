@@ -2,7 +2,7 @@ import { exec, globalExec, replace, test } from './reFunctions';
 import { getPointers, validation } from './utils';
 const RegExp2 = require('../../re2Lib');
 
-const RE2 = async (regex: string, flag?: string): Promise<RE2> => {
+const init = async(regex: string, flag?: string): Promise<RE2> => {
   return await RegExp2().then((re2: Module) => {
     validation(re2, regex);
     return {
@@ -26,6 +26,10 @@ const RE2 = async (regex: string, flag?: string): Promise<RE2> => {
         }),
     };
   });
+};
+
+const RE2 = async(regex: string, flag?: string): Promise<RE2> => {
+  return await init(regex, flag);
 };
 
 export default RE2;
