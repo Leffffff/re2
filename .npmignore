@@ -9,3 +9,4 @@ src/
 re2Wrapper.cc
 *.md
 test/
+scripts/
