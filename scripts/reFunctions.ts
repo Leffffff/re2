@@ -15,11 +15,11 @@ export const test = (module: Module, text: string, regex: string): boolean => {
   return isFulfilled;
 };
 
-export const globalExec = async (
+export const globalExec = (
   module: Module,
   text: string,
   regex: string
-): Promise<string[][] | null> => {
+): string[][] | null => {
   const [regexPointer] = getPointers(module, regex);
 
   const captureGroups = module._getNumberOfCapturingGroups(regexPointer);
@@ -70,7 +70,7 @@ export const exec = (
 
   const arr = getStringsFromPointerArray(module, arrayPointer, captureGroups);
 
-  freeUpMemory(module, textPointer, regexPointer, arrayPointer);
+  freeUpMemory(module, textPointer, regexPointer);
   return arr;
 };
 

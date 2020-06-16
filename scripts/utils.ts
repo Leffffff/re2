@@ -42,6 +42,7 @@ export const getStringsFromPointerArray = (
     freeUpMemory(module, stringPtr);
     arr.push(string);
   }
+  freeUpMemory(module, arrayPointer);
   return arr || [];
 };
 

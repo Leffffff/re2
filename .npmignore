@@ -1,9 +1,11 @@
 ./vscode
 .DS_Store
-./google-re2
-./src
+google-re2/
+src/
 .gitignore
 .gitmodules
+.prettierrc.yaml
+.eslintrc.yaml
 re2Wrapper.cc
 README.md
-test.js
+test/

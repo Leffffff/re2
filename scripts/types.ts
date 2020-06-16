@@ -54,5 +54,5 @@ type ReplaceInput = {
 type RE2 = {
   numberOfCaptureGroups(): Promise<void>;
   test(s: string): Promise<boolean>;
-  exec(s: string): Promise<string[] | string[][]>;
+  exec(s: string): Promise<string[] | string[][] | null>;
 };

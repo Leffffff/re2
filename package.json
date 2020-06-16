@@ -1,6 +1,6 @@
 {
   "name": "@skyfence/re2-wasm",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "RE2 for different platforms (Linux, Windows, macOS)",
   "main": "lib/scripts/re2.js",
   "types": "lib/scripts/types.d.ts",
@@ -10,7 +10,7 @@
     "source": "source ../emsdk/emsdk_env.sh",
     "compile": "em++ re2Wrapper.cc src/re2.cc src/filtered_re2.cc src/prefilter_tree.cc src/regexp.cc src/stringpiece.cc src/unicode_*.cc src/perl_groups.cc src/parse.cc src/rune.cc src/simplify.cc src/compile.cc src/prog.cc src/nfa.cc src/onepass.cc src/prefilter.cc src/dfa.cc src/bitstate.cc src/tostring.cc -o re2Lib.js -s LINKABLE=1 -s EXPORT_ALL=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"stringToUTF8\", \"UTF8ToString\"]' -s MODULARIZE=1 -s 'EXPORT_NAME=\"RegExp2\"' -s ALLOW_MEMORY_GROWTH=1  -O3",
     "makeSrc": "npx tsc && node lib/scripts/updateBuild.js",
-    "build:update": "npm run makeSrc && npm run compile && npm test && npm publish"
+    "build:update": "npm run makeSrc && npm run compile && npm test"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "async-to-sync": "^1.0.7"
+  },
   "devDependencies": {
     "@types/node": "^13.13.12",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
