@@ -7,5 +7,5 @@ src/
 .prettierrc.yaml
 .eslintrc.yaml
 re2Wrapper.cc
-README.md
+*.md
 test/
