@@ -30,7 +30,7 @@ export const globalExec = (
     return null;
   }
 
-  const [, ...groups] = getGroups(regex, captureGroups);
+  const groups = getGroups(module, regexPointer, captureGroups);
   const position = getPosition(groups);
 
   let [textPointer] = getPointers(module, text);
