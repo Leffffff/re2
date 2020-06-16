@@ -12,10 +12,13 @@ export const stringOnWasmHeap = (module: Module) => (
 export const getPointers = (module: Module, ...values: string[]): Pointer[] =>
   values.map(stringOnWasmHeap(module));
 
-export const getGroups = (regex: string, n: number): string[] => {
-  const repeat = `(.+?)\\(.+?\\)`.repeat(n);
-  const re = new RegExp(repeat);
-  return re.exec(regex) as RegExpExecArray;
+export const getGroups = (module: Module, regexPointer: Pointer, captureGroups: number): string[] => {
+  const repeat = `(.+?)\\(.+?\\)`.repeat(captureGroups);
+  const [repeatP] = getPointers(module, repeat);
+  const arrayPointer = module._getCapturingGroups(regexPointer, repeatP);
+  const arr = getStringsFromPointerArray(module, arrayPointer, captureGroups);
+  freeUpMemory(module, repeatP)
+  return arr;
 };
 
 export const getPosition = (groups: string[]) => (
