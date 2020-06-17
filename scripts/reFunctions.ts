@@ -6,7 +6,11 @@ import {
   getStringsFromPointerArray,
 } from './utils';
 
-export const test = (module: Module, text: string, regex: string): boolean => {
+export const testFunction = (
+  module: Module,
+  text: string,
+  regex: string
+): boolean => {
   const [textPointer, regexPointer] = getPointers(module, text, regex);
 
   const isFulfilled = !!module._check(textPointer, regexPointer);
@@ -49,7 +53,7 @@ export const globalExec = (
   return gArr[0] ? gArr : null;
 };
 
-export const exec = (
+export const execFunction = (
   module: Module,
   text: string,
   regex: string
@@ -73,7 +77,7 @@ export const exec = (
   return arr;
 };
 
-export const replace = ({
+export const replaceFunction = ({
   module,
   baseText,
   regex,
