@@ -7,8 +7,25 @@ import {
 import { getPointers, validate } from './utils';
 const RegExp2 = require('../../re2Lib');
 
-export const init = async (regex: string, flag = ''): Promise<RE2> => {
-  return await RegExp2().then((re2: Module) => {
+// const Module = require('./test.js');
+// const wasm = Module({ wasmBinaryFile: 'test.wasm' });
+// wasm.onRuntimeInitialized = function() {
+//   console.log(wasm._add(40, 40));
+//   const mem = wasm._create(100, 100);
+//   wasm._destroy(mem);
+//   console.log('Done');
+// };
+
+export const init = (regex: string, flag = ''): RE2 => {
+  // RegExp2['wasmBinary'] = readFileSync(resolve(__dirname, '../../re2Lib.wasm'));
+  // const re2 = RegExp2({
+  //   wasmBinaryFile: resolve(__dirname, '../../re2Lib.wasm'),
+  // });
+  // re2.onRuntimeInitialized = function() {
+  //   // wasm._destroy(mem);
+  //   console.log('Done');
+  // };
+  return RegExp2().then((re2: Module) => {
     validate(re2, regex);
     return {
       numberOfCaptureGroups: (): number => {

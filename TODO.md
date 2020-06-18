@@ -1,5 +1,7 @@
 # Todo list
 
-1. Make core functions sync
+1. Update Exec return type API
 
-2. Redo global match function
+2. Update functionality to sync
+
+3. Update package

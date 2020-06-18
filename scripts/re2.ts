@@ -1,7 +1,3 @@
 import { init } from './init';
 
-const RE2 = async (regex: string, flag?: string): Promise<RE2> => {
-  return await init(regex, flag);
-};
-
-export default RE2;
+export const RE2 = (regex: string, flag?: string): RE2 => init(regex, flag);
