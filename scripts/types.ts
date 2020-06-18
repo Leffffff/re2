@@ -25,10 +25,10 @@ type Module = {
   /** @function _getStringPtrByIndex : returns address of array element by index. */
   _getStringPtrByIndex(arrayPtr: Pointer, index: number): Pointer;
 
-  /** @function _clearArray : clears pointer array. (experimental/deprecated) (We think this function is similiar to _free) */
+  /** @deprecated @function _clearArray : clears pointer array. (experimental/deprecated) (We think this function is similiar to _free)  */
   _clearArray(arrayPtr: Pointer, n: number): void;
 
-  /** @function _singleMatch : returns address of matched string by single capture string. (experimental/deprecated) */
+  /** @deprecated @function _singleMatch : returns address of matched string by single capture string. (experimental/deprecated) */
   _singleMatch(sPtr: Pointer, rePtr: Pointer): Pointer;
 
   /** @function _check : returns boolean if regex matches string. */
@@ -52,8 +52,8 @@ type ReplaceInput = {
 };
 
 type RE2 = {
-  numberOfCaptureGroups(): void;
+  numberOfCaptureGroups(): number;
   test(s: string): boolean;
-  exec(s: string): string[] | string[][] | null;
+  exec(s: string): string[][] | null;
   replace(s: string, rewrite: string): string;
 };

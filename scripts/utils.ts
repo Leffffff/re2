@@ -28,12 +28,13 @@ export const getStringsFromPointerArray = (
   return arr || [];
 };
 
+const regex = '([^(]+)\\([^)]+\\)';
 export const getGroups = (
   module: Module,
   regexPointer: Pointer,
   captureGroups: number
 ): string[] => {
-  const repeat = `(.+?)\\(.+?\\)`.repeat(captureGroups);
+  const repeat = regex.repeat(captureGroups);
   const [repeatP] = getPointers(module, repeat);
   const arrayPointer = module._getCapturingGroups(regexPointer, repeatP);
   const arr = getStringsFromPointerArray(module, arrayPointer, captureGroups);
@@ -53,7 +54,7 @@ export const getPosition = (groups: string[]) => (
   return pos + stringToDelete.length;
 };
 
-export const validation = (module: Module, regex: string): void => {
+export const validate = (module: Module, regex: string): void => {
   const [regexPointer] = getPointers(module, regex);
   const statusPointer = module._validate(regexPointer);
   const status = module.UTF8ToString(statusPointer);
