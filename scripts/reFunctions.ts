@@ -82,14 +82,14 @@ export const replaceFunction = ({
   baseText,
   regex,
   rewrite,
-  flag,
+  flag = '',
 }: ReplaceInput): string => {
   const [textPointer, regexPointer, rewritePointer, flagPointer] = getPointers(
     module,
     baseText,
     regex,
     rewrite,
-    flag || ''
+    flag
   );
 
   const replacedStringPointer = module._replace(
