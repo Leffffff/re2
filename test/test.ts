@@ -7,7 +7,6 @@ import { RE2 } from '../scripts/re2';
   const regex = '"HUigovno":"([^"]+).+?RawIdentity":"([^"]+)';
 
   const refun = RE2(regex, 'g');
-  console.log('INFO: RE2', refun);
 
   const isMatch = refun.test(text);
   console.log('INFO: test -> ', isMatch);
