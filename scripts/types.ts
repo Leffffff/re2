@@ -48,6 +48,6 @@ type ReplaceInput = {
 type RE2 = {
   numberOfCaptureGroups(): number;
   test(s: string): boolean;
-  exec(s: string): string[][] | null;
+  exec(s: string): string[] | string[][] | null;
   replace(s: string, rewrite: string): string;
 };
