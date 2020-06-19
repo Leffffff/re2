@@ -17,13 +17,13 @@ import { RE2 } from '../scripts/re2';
 
   const text2 =
     'yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo';
-  const reRepl = await RE2('(\\w+?)&.+?&(\\w+)', 'g');
+  const reRepl = RE2('(\\w+?)&.+?&(\\w+)', 'g');
   console.log('INFO: replace -> ', reRepl.replace(text2, '\\2 \\1'));
 
-  const reRepl2 = await RE2('(\\w+?)&.+?&(\\w+)', 'g');
+  const reRepl2 = RE2('(\\w+?)&.+?&(\\w+)', 'g');
   console.log('INFO: replace -> ', reRepl2.replace(text2, '\\2 \\1'));
 
-  const reRepl3 = await RE2('(\\w+?)&.+?&(\\w+)', 'g');
+  const reRepl3 = RE2('(\\w+?)&.+?&(\\w+)', 'g');
   console.log('INFO: replace -> ', reRepl3.replace(text2, '\\2 \\1'));
 
   const n = refun.numberOfCaptureGroups();

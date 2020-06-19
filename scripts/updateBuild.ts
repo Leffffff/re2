@@ -1,9 +1,9 @@
 import {
-  readdirSync,
-  unlinkSync,
-  readFile,
-  writeFileSync,
   copyFileSync,
+  readdirSync,
+  readFile,
+  unlinkSync,
+  writeFileSync,
 } from 'fs';
 
 const cleanUp = (folder: string): void =>
@@ -26,7 +26,8 @@ const updateIncludes = (folder: string): void =>
   readdirSync(folder).forEach(file =>
     readFile(`${folder}${file}`, 'utf8', (err, data) => {
       if (err) return console.log(err);
-      const result = data.replace(/#include "(?:re2|util)\//g, '#include "');
+      const regex = /#include "(?:re2|util)\//g;
+      const result = data.replace(regex, '#include "');
       writeFileSync(`${folder}${file}`, result, 'utf8');
     })
   );

@@ -1,55 +1,32 @@
-import {
-  execFunction,
-  globalExec,
-  replaceFunction,
-  testFunction,
-} from './reFunctions';
+import { execRegex, globalExec, replaceString, testRegex } from './reFunctions';
 import { getPointers, validate } from './utils';
-const RegExp2 = require('../../re2Lib');
-
-// const Module = require('./test.js');
-// const wasm = Module({ wasmBinaryFile: 'test.wasm' });
-// wasm.onRuntimeInitialized = function() {
-//   console.log(wasm._add(40, 40));
-//   const mem = wasm._create(100, 100);
-//   wasm._destroy(mem);
-//   console.log('Done');
-// };
+const Module = require('../../re2Lib');
 
 export const init = (regex: string, flag = ''): RE2 => {
-  // RegExp2['wasmBinary'] = readFileSync(resolve(__dirname, '../../re2Lib.wasm'));
-  // const re2 = RegExp2({
-  //   wasmBinaryFile: resolve(__dirname, '../../re2Lib.wasm'),
-  // });
-  // re2.onRuntimeInitialized = function() {
-  //   // wasm._destroy(mem);
-  //   console.log('Done');
-  // };
-  return RegExp2().then((re2: Module) => {
-    validate(re2, regex);
+  Module.onRuntimeInitialized = (): RE2 => {
+    validate(Module, regex);
     return {
       numberOfCaptureGroups: (): number => {
-        const [regexPointer] = getPointers(re2, regex);
-        return re2._getNumberOfCapturingGroups(regexPointer);
+        const [regexPointer] = getPointers(Module, regex);
+        return Module._getNumberOfCapturingGroups(regexPointer);
       },
 
-      test: (text: string): boolean => testFunction(re2, text, regex),
+      test: (text: string): boolean => testRegex(Module, text, regex),
 
-      exec: (
-        text: string
-      ): string[] | string[][] | null => // make proper return value API
+      exec: (text: string): string[] | string[][] | null =>
         flag === 'g'
-          ? globalExec(re2, text, regex)
-          : execFunction(re2, text, regex),
+          ? globalExec(Module, text, regex)
+          : execRegex(Module, text, regex),
 
       replace: (baseText: string, rewrite: string): string =>
-        replaceFunction({
-          module: re2,
+        replaceString({
+          module: Module,
           baseText,
           regex,
           rewrite,
-          flag,
+          flag: flag || '',
         }),
     };
-  });
+  };
+  return Module.onRuntimeInitialized();
 };
