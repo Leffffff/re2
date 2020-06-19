@@ -58,6 +58,6 @@ export const validate = (module: Module, regex: string): void => {
   const [regexPointer] = getPointers(module, regex);
   const statusPointer = module._validate(regexPointer);
   if (statusPointer !== 0) throw Error(module.UTF8ToString(statusPointer));
-  
+
   freeUpMemory(module, regexPointer, statusPointer);
 };

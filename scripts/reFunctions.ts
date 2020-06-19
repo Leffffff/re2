@@ -19,62 +19,49 @@ export const testRegex = (
   return isFulfilled;
 };
 
-export const globalExec = (
-  module: Module,
-  text: string,
-  regex: string
-): string[][] | null => {
-  const [regexPointer] = getPointers(module, regex);
-
-  const captureGroups = module._getNumberOfCapturingGroups(regexPointer);
-  if (captureGroups < 0) throw Error('Error with groups');
-
-  if (captureGroups === 0) {
-    console.log("Regex doesn't have capture group(s)");
-    return null;
-  }
-
-  const groups = getGroups(module, regexPointer, captureGroups);
-  const position = getPosition(groups);
-
-  let [textPointer] = getPointers(module, text);
-  const gArr = [];
-
-  while (true) {
-    textPointer = getPointers(module, text)[0];
-    const arrayPointer = module._getCapturingGroups(textPointer, regexPointer);
-    if (arrayPointer === 0) break;
-
-    const arr = getStringsFromPointerArray(module, arrayPointer, captureGroups);
-    gArr.push(arr);
-    text = text.slice(position(text, arr));
-  }
-  freeUpMemory(module, regexPointer, textPointer);
-  return gArr[0] ? gArr : null;
-};
-
 export const execRegex = (
   module: Module,
   text: string,
-  regex: string
-): string[] | null => {
-  const [textPointer, regexPointer] = getPointers(module, text, regex);
+  regex: string,
+  flag = ''
+): string[][] => {
+  const [regexPointer] = getPointers(module, regex);
+  let [textPointer] = getPointers(module, text);
 
   const captureGroups = module._getNumberOfCapturingGroups(regexPointer);
   if (captureGroups < 0) throw Error('Error with groups');
 
   if (captureGroups === 0) {
-    console.log("Regex doesn't have capture group(s)");
-    return null;
+    return []; // Regex doesn't have capture group(s)
   }
 
-  const arrayPointer = module._getCapturingGroups(textPointer, regexPointer);
-  if (arrayPointer === 0) return null; // no matched string
+  const array: string[][] = [];
+  if (flag === 'g') {
+    const groups = getGroups(module, regexPointer, captureGroups);
+    const position = getPosition(groups);
+    while (true) {
+      textPointer = getPointers(module, text)[0];
+      const arrayPointer = module._getCapturingGroups(
+        textPointer,
+        regexPointer
+      );
+      if (arrayPointer === 0) break;
 
-  const arr = getStringsFromPointerArray(module, arrayPointer, captureGroups);
+      const arr = getStringsFromPointerArray(
+        module,
+        arrayPointer,
+        captureGroups
+      );
+      array.push(arr);
+      text = text.slice(position(text, arr));
+    }
+  } else {
+    const arrayPointer = module._getCapturingGroups(textPointer, regexPointer);
+    array.push(getStringsFromPointerArray(module, arrayPointer, captureGroups));
+  }
 
   freeUpMemory(module, textPointer, regexPointer);
-  return arr;
+  return array;
 };
 
 export const replaceString = ({

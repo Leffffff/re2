@@ -28,7 +28,7 @@ type Module = {
   /** @function _check : returns boolean if regex matches string. */
   _check(sPtr: Pointer, rePtr: Pointer): 0 | 1;
 
-  /** @function _replace : return new string with some or all matches of a pattern replaced by a replacement. */
+  /** @function _replace : returns pointer to new string with some or all matches of a pattern replaced by a replacement. */
   _replace(
     basicPtr: Pointer,
     fromPtr: Pointer,
@@ -46,8 +46,35 @@ type ReplaceInput = {
 };
 
 type RE2 = {
+  /** @function numberOfCaptureGroups : returns number of capture groups. */
   numberOfCaptureGroups(): number;
+
+  /** @function _replace : returns boolean if regex matches string. */
   test(s: string): boolean;
-  exec(s: string): string[] | string[][] | null;
+
+  /** @function _replace : returns array of matched capture groups or empty array.
+   *
+   * @example
+   * s = '"User":"Alexandr","Number":"17","User":"Sanya","Number":"1337"'
+   *
+   * if
+   * re = '"User":"([^"]+).+?Number":"([^"]+)', 'g'
+   * output = [ [Alexandr, 17], [Sanya, 1337] ]
+   *
+   * if
+   * re = '"User":"([^"]+).+?Number":"([^"]+)'
+   * output = [ [ Alexandr, 17 ] ]
+   *
+   * if
+   * re = '"User":"([^"]+)', 'g'
+   * output = [ [Alexandr, Sanya] ]
+   *
+   * if
+   * re = '"Number":"([^"]+)'
+   * output = [ [ 17 ] ]
+   */
+  exec(s: string): string[][];
+
+  /** @function _replace : return new string with some or all matches of a pattern replaced by a replacement. */
   replace(s: string, rewrite: string): string;
 };

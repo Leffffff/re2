@@ -1,4 +1,4 @@
-import { execRegex, globalExec, replaceString, testRegex } from './reFunctions';
+import { execRegex, replaceString, testRegex } from './reFunctions';
 import { getPointers, validate } from './utils';
 const Module = require('../../re2Lib');
 
@@ -13,10 +13,7 @@ export const init = (regex: string, flag = ''): RE2 => {
 
       test: (text: string): boolean => testRegex(Module, text, regex),
 
-      exec: (text: string): string[] | string[][] | null =>
-        flag === 'g'
-          ? globalExec(Module, text, regex)
-          : execRegex(Module, text, regex),
+      exec: (text: string): string[][] => execRegex(Module, text, regex, flag),
 
       replace: (baseText: string, rewrite: string): string =>
         replaceString({
