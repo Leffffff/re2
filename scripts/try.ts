@@ -120,4 +120,13 @@ const re = (regex: string, flag: string) => {
 
   const num = qwe.numberOfCaptureGroups();
   console.log('INFO: numberOfCaptureGroups -> ', num);
+
+  const matched = refun.exec(text);
+  console.log('INFO: exec -> ', matched);
+
+  const text2 =
+    'yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo';
+  const reRepl = re('(\\w+?)&.+?&(\\w+)', 'g');
+  console.log('INFO: replace -> ', reRepl.replace(text2, '\\2 \\1'));
+
 })();
