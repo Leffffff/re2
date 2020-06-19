@@ -1,6 +1,6 @@
 {
   "name": "@skyfence/re2-wasm",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "RE2 for different platforms (Linux, Windows, macOS)",
   "main": "./lib/scripts/re2.js",
   "types": "./lib/scripts/*.d.ts",
