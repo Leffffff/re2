@@ -57,8 +57,7 @@ export const getPosition = (groups: string[]) => (
 export const validate = (module: Module, regex: string): void => {
   const [regexPointer] = getPointers(module, regex);
   const statusPointer = module._validate(regexPointer);
-  const status = module.UTF8ToString(statusPointer);
-
-  if (status !== 'ok') throw Error(status);
+  if (statusPointer !== 0) throw Error(module.UTF8ToString(statusPointer));
+  
   freeUpMemory(module, regexPointer, statusPointer);
 };

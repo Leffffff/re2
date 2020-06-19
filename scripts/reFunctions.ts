@@ -89,7 +89,6 @@ export const replaceString = ({
     baseText,
     regex,
     rewrite,
-    flag
   );
 
   const replacedStringPointer = module._replace(

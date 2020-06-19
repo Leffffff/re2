@@ -9,11 +9,11 @@
 
 extern "C"
 {
-    char *getPtr(const std::string &message)
+    char *getStringPtr(const std::string &inputString)
     {
-        char *m = new char[message.length() + 1];
-        strcpy(m, message.c_str());
-        return m;
+        char *stringPtr = new char[inputString.length() + 1];
+        strcpy(stringPtr, inputString.c_str());
+        return stringPtr;
     }
 
     int getNumberOfCapturingGroups(char *inputRegex)
@@ -26,20 +26,9 @@ extern "C"
         return stringArray[index];
     }
 
-    void clearArray(char **stringArray, int size)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-            delete[] stringArray[i];
-        }
-        delete[] stringArray;
-    }
-
     void *getCapturingGroups(char *inputString, char *inputRegex)
     {
         re2::RE2 regex(inputRegex);
-        if (regex.error_code())
-            return nullptr;
         int n = regex.NumberOfCapturingGroups();
 
         std::vector<re2::RE2::Arg> argv(n); //need refactor
@@ -73,33 +62,18 @@ extern "C"
         return re2::RE2::PartialMatch(text, regex);
     }
 
-    char *replace(char *text, char *regex, char *rewrite, char *flag)
+    char *replace(char *text, char *regex, char *rewrite, char* flag)
     {
         std::string replacedString = text;
         if (*flag == 'g')
             re2::RE2::GlobalReplace(&replacedString, regex, rewrite);
         re2::RE2::Replace(&replacedString, regex, rewrite);
-        return getPtr(replacedString);
+        return getStringPtr(replacedString);
     }
 
-    char *singleMatch(char *text, char *regex)
-    {
-        if (check(text, regex))
-        {
-            std::string captured;
-            re2::RE2::PartialMatch(text, regex, &captured);
-            return getPtr(captured);
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-
-    char *validate(char *regexp)
+    void *validate(char *regexp)
     {
         re2::RE2 regex(regexp);
-        std::string message = "ok";
-        return regex.ok() ? getPtr(message) : getPtr(regex.error());
+        return regex.ok() ? nullptr : getStringPtr(regex.error());
     }
 }
