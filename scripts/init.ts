@@ -1,6 +1,6 @@
 import { execRegex, replaceString, testRegex } from './reFunctions';
 import { getPointers, validate } from './utils';
-const Module = require('../../re2Lib');
+const Module = require('../../re2Lib') as Module;
 
 export const init = (regex: string, flag = ''): RE2 => {
   Module.onRuntimeInitialized = (): RE2 => {

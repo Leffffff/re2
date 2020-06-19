@@ -1,6 +1,9 @@
 type Pointer = number;
 
 type Module = {
+  /** @function onRuntimeInitialized : init RE2 component. */
+  onRuntimeInitialized(): RE2;
+
   /** @function _malloc : allocates memory and returns address. */
   _malloc(len: number): number;
 
