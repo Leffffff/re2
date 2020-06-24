@@ -35,6 +35,7 @@ type Module = {
     toPtr: Pointer,
     flagPtr: Pointer
   ): Pointer;
+  _escapeMetaCharacter(textP: Pointer): Pointer
 };
 
 type ReplaceParams = 'baseText' | 'regex' | 'rewrite' | 'flag';

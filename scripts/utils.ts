@@ -28,7 +28,7 @@ export const getStringsFromPointerArray = (
   return arr || [];
 };
 
-const regex = '(.+?)\\((?:[^?]|\\?[^:])+\\)';
+const regex = '(.+?)\\((?:[^?]|\\?[^:i\-])+\\)';
 export const getGroups = (
   module: Module,
   regexPointer: Pointer,
@@ -42,18 +42,26 @@ export const getGroups = (
   return arr;
 };
 
-const escapeBraces = (str: string): string =>
-  str.replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+const escapeMetaCharacter = (module: Module, str: string): string => {
+  const [textPointer] = getPointers(
+    module,
+    str,
+  );
+  const escapedPointer = module._escapeMetaCharacter(textPointer)
+  const modifiedText = module.UTF8ToString(escapedPointer)
+  freeUpMemory(module, textPointer, escapedPointer)
+  return modifiedText;
+}
 
-const fullMatchRegex = (groups: string[], array: string[]): string =>
-  '(' + groups.map((el, i) => el + escapeBraces(array[i])).join('') + ')';
+const fullMatchRegex = (module: Module, groups: string[], array: string[]): string =>
+  '(' + groups.map((el, i) => el + escapeMetaCharacter(module, array[i])).join('') + ')';
 
 export const getPosition = (groups: string[]) => (
   module: Module,
   text: string,
   array: string[]
 ): number => {
-  const foundString = fullMatchRegex(groups, array);
+  const foundString = fullMatchRegex(module, groups, array);
   const [textPointer, foundStringPointer] = getPointers(
     module,
     text,

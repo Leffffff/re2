@@ -14,6 +14,11 @@ extern "C"
         return stringPtr;
     }
 
+    char *escapeMetaCharacter(char *inputText)
+    {
+        return getStringPtr(re2::RE2::QuoteMeta(inputText));
+    }
+    
     int getNumberOfCapturingGroups(char *inputRegex)
     {
         return re2::RE2(inputRegex).NumberOfCapturingGroups();
