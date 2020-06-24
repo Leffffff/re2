@@ -1,7 +1,7 @@
 import { execRegex, replaceString, testRegex } from './reFunctions';
-import { getPointers, validate } from './utils';
+import { freeUpMemory, getPointers, validate } from './utils';
 
-const Module = require('../../re2Lib') as Module;
+const Module = require('../../bin/re2Lib') as Module;
 export class RE2 {
   private regex: string;
   private flag?: string;
@@ -15,7 +15,9 @@ export class RE2 {
   /** @function numberOfCaptureGroups : returns number of capture groups. */
   numberOfCaptureGroups = (): number => {
     const [regexPointer] = getPointers(Module, this.regex);
-    return Module._getNumberOfCapturingGroups(regexPointer);
+    const number = Module._getNumberOfCapturingGroups(regexPointer);
+    freeUpMemory(Module, regexPointer);
+    return number;
   };
 
   /** @function _replace : returns boolean if regex matches string. */

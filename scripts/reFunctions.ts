@@ -19,6 +19,8 @@ export const testRegex = (
   return isFulfilled;
 };
 
+const isEmpty = (el: string): boolean => el.length > 0; // maybe delete 
+
 export const execRegex = (
   module: Module,
   text: string,
@@ -52,12 +54,17 @@ export const execRegex = (
         arrayPointer,
         captureGroups
       );
-      array.push(arr);
-      text = text.slice(position(text, arr));
+      array.push(arr.filter(isEmpty));
+      text = text.slice(position(module, text, arr));
     }
   } else {
     const arrayPointer = module._getCapturingGroups(textPointer, regexPointer);
-    array.push(getStringsFromPointerArray(module, arrayPointer, captureGroups));
+    const stringArray = getStringsFromPointerArray(
+      module,
+      arrayPointer,
+      captureGroups
+    );
+    array.push(stringArray.filter(isEmpty));
   }
 
   freeUpMemory(module, textPointer, regexPointer);

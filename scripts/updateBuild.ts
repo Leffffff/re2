@@ -33,7 +33,7 @@ const updateIncludes = (folder: string): void =>
 
 ((): void => {
   const targetDirs = ['google-re2/re2/', 'google-re2/util/'];
-  const folder = './src/';
+  const folder = './basement/';
   cleanUp(folder);
   copyFiles(folder, targetDirs);
   updateIncludes(folder);

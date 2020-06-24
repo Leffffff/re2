@@ -1,12 +1,13 @@
 ./vscode
 .DS_Store
 google-re2/
-src/
+basement/
 .gitignore
 .gitmodules
 .prettierrc.yaml
 .eslintrc.yaml
 re2Wrapper.cc
 *.md
-test/
+tests/
 scripts/
+tsconfig.json
