@@ -7,6 +7,12 @@ export class RE2 {
   private flag?: string;
 
   constructor(regex: string, flag?: string) {
+    //just like RegExp // maybe we want return undef or throw exeption
+    // if null => /null/
+    if (regex === undefined) {
+      this.regex = '(?:)'; // like new RegExp(undefined)
+      return this;
+    }
     validate(Module, regex);
     this.regex = regex;
     this.flag = flag;

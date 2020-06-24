@@ -28,7 +28,10 @@ export const getStringsFromPointerArray = (
   return arr || [];
 };
 
-const regex = '(.+?)\\((?:[^?]|\\?[^:i\-])+\\)';
+// old -> '(.+?)\\((?:[^?]|\\?[^:i\-])+\\)';
+// fixed? no. try1 -> '(.+?)\\((?:[^?]|[^:i-])+\\)';
+// fixed with -> '(.+?)\\((?:[^?]|[^?][^-i:]).+?\\)';
+const regex = '(.+?)\\((?:[^?]|[^?][^-i:]).+?\\)';
 export const getGroups = (
   module: Module,
   regexPointer: Pointer,
@@ -43,18 +46,21 @@ export const getGroups = (
 };
 
 const escapeMetaCharacter = (module: Module, str: string): string => {
-  const [textPointer] = getPointers(
-    module,
-    str,
-  );
-  const escapedPointer = module._escapeMetaCharacter(textPointer)
-  const modifiedText = module.UTF8ToString(escapedPointer)
-  freeUpMemory(module, textPointer, escapedPointer)
+  const [textPointer] = getPointers(module, str);
+  const escapedPointer = module._escapeMetaCharacter(textPointer);
+  const modifiedText = module.UTF8ToString(escapedPointer);
+  freeUpMemory(module, textPointer, escapedPointer);
   return modifiedText;
-}
+};
 
-const fullMatchRegex = (module: Module, groups: string[], array: string[]): string =>
-  '(' + groups.map((el, i) => el + escapeMetaCharacter(module, array[i])).join('') + ')';
+const fullMatchRegex = (
+  module: Module,
+  groups: string[],
+  array: string[]
+): string =>
+  '(' +
+  groups.map((el, i) => el + escapeMetaCharacter(module, array[i])).join('') +
+  ')';
 
 export const getPosition = (groups: string[]) => (
   module: Module,
@@ -69,6 +75,7 @@ export const getPosition = (groups: string[]) => (
   );
 
   const arrayP = module._getCapturingGroups(textPointer, foundStringPointer);
+  freeUpMemory(module, textPointer, foundStringPointer);
   const [fullCapture] = getStringsFromPointerArray(module, arrayP, 1);
   const pos = text.indexOf(fullCapture);
   return pos + fullCapture.length;

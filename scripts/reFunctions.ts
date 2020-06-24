@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from 'util';
 import {
   freeUpMemory,
   getGroups,
@@ -11,6 +12,7 @@ export const testRegex = (
   text: string,
   regex: string
 ): boolean => {
+  if (isNullOrUndefined(text)) return false; // RegExp works with null or undefined like just strings 'null' or 'undefined'
   const [textPointer, regexPointer] = getPointers(module, text, regex);
 
   const isFulfilled = !!module._check(textPointer, regexPointer);
@@ -19,7 +21,7 @@ export const testRegex = (
   return isFulfilled;
 };
 
-const isEmpty = (el: string): boolean => el.length > 0; // maybe delete 
+const isEmpty = (el: string): boolean => el.length > 0; // maybe delete
 
 export const execRegex = (
   module: Module,
@@ -27,6 +29,7 @@ export const execRegex = (
   regex: string,
   flag = ''
 ): string[][] => {
+  if (isNullOrUndefined(text)) return []; // RegExp works with null or undefined like just strings 'null' or 'undefined'
   const [regexPointer] = getPointers(module, regex);
   let [textPointer] = getPointers(module, text);
 
