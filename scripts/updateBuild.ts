@@ -9,7 +9,7 @@ import {
 const cleanUp = (folder: string): void =>
   readdirSync(folder).forEach(file => unlinkSync(`${folder}${file}`));
 
-const isUsefullFile = (file: string): boolean =>
+const isUsefulFile = (file: string): boolean =>
   (file.endsWith('.cc') || file.endsWith('.h')) &&
   !file.startsWith('test') &&
   !file.startsWith('fuzz');
@@ -17,8 +17,7 @@ const isUsefullFile = (file: string): boolean =>
 const copyFiles = (folder: string, targetDirs: string[]): void =>
   targetDirs.forEach(dir =>
     readdirSync(dir).forEach(file => {
-      if (isUsefullFile(file))
-        copyFileSync(`${dir}${file}`, `${folder}${file}`);
+      if (isUsefulFile(file)) copyFileSync(`${dir}${file}`, `${folder}${file}`);
     })
   );
 
@@ -34,7 +33,7 @@ const updateIncludes = (folder: string): void =>
 
 ((): void => {
   const targetDirs = ['google-re2/re2/', 'google-re2/util/'];
-  const folder = './src/';
+  const folder = './basement/';
   cleanUp(folder);
   copyFiles(folder, targetDirs);
   updateIncludes(folder);

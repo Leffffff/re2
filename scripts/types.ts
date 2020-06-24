@@ -28,7 +28,7 @@ type Module = {
   /** @function _check : returns boolean if regex matches string. */
   _check(sPtr: Pointer, rePtr: Pointer): 0 | 1;
 
-  /** @function _replace : return new string with some or all matches of a pattern replaced by a replacement. */
+  /** @function _replace : returns pointer to new string with some or all matches of a pattern replaced by a replacement. */
   _replace(
     basicPtr: Pointer,
     fromPtr: Pointer,
@@ -43,11 +43,4 @@ type ReplaceInput = {
   module: Module;
 } & {
   [k in ReplaceParams]: string;
-};
-
-type RE2 = {
-  numberOfCaptureGroups(): number;
-  test(s: string): boolean;
-  exec(s: string): string[] | string[][] | null;
-  replace(s: string, rewrite: string): string;
 };

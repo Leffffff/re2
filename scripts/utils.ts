@@ -28,7 +28,7 @@ export const getStringsFromPointerArray = (
   return arr || [];
 };
 
-const regex = '([^(]+)\\([^)]+\\)';
+const regex = '(.+?)\\((?:[^?]|\\?[^:])+\\)';
 export const getGroups = (
   module: Module,
   regexPointer: Pointer,
@@ -42,22 +42,34 @@ export const getGroups = (
   return arr;
 };
 
+const escapeBraces = (str: string): string =>
+  str.replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+
+const fullMatchRegex = (groups: string[], array: string[]): string =>
+  '(' + groups.map((el, i) => el + escapeBraces(array[i])).join('') + ')';
+
 export const getPosition = (groups: string[]) => (
+  module: Module,
   text: string,
   array: string[]
 ): number => {
-  const foundString = groups.map((el, i) => el + array[i]).join('');
-  const stringToDelete = (new RegExp(foundString).exec(
-    text
-  ) as RegExpExecArray)[0];
-  const pos = text.indexOf(stringToDelete);
-  return pos + stringToDelete.length;
+  const foundString = fullMatchRegex(groups, array);
+  const [textPointer, foundStringPointer] = getPointers(
+    module,
+    text,
+    foundString
+  );
+
+  const arrayP = module._getCapturingGroups(textPointer, foundStringPointer);
+  const [fullCapture] = getStringsFromPointerArray(module, arrayP, 1);
+  const pos = text.indexOf(fullCapture);
+  return pos + fullCapture.length;
 };
 
 export const validate = (module: Module, regex: string): void => {
   const [regexPointer] = getPointers(module, regex);
   const statusPointer = module._validate(regexPointer);
   if (statusPointer !== 0) throw Error(module.UTF8ToString(statusPointer));
-  
+
   freeUpMemory(module, regexPointer, statusPointer);
 };
