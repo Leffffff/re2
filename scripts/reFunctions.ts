@@ -12,7 +12,7 @@ export const testRegex = (
   text: string,
   regex: string
 ): boolean => {
-  if (isNullOrUndefined(text)) return false; // RegExp works with null or undefined like just strings 'null' or 'undefined'
+  if (isNullOrUndefined(text)) text = `${text}`; // RegExp works with null or undefined like just strings 'null' or 'undefined'
   const [textPointer, regexPointer] = getPointers(module, text, regex);
 
   const isFulfilled = !!module._check(textPointer, regexPointer);
@@ -29,7 +29,7 @@ export const execRegex = (
   regex: string,
   flag = ''
 ): string[][] => {
-  if (isNullOrUndefined(text)) return []; // RegExp works with null or undefined like just strings 'null' or 'undefined'
+  if (isNullOrUndefined(text)) text = `${text}`; // RegExp works with text = null or undefined as text like just strings 'null' or 'undefined'
   const [regexPointer] = getPointers(module, regex);
   let [textPointer] = getPointers(module, text);
 

@@ -13,6 +13,10 @@ export class RE2 {
       this.regex = '(?:)'; // like new RegExp(undefined)
       return this;
     }
+    if (regex === null) {
+      this.regex = `${regex}`;
+      return this;
+    }
     validate(Module, regex);
     this.regex = regex;
     this.flag = flag;

@@ -7,19 +7,51 @@ import { RE2 } from '../scripts/re2';
   // `;
 
   const regex = '"(.+?)": "(.+?)"'; // '"(.+?)": "(.+?)"'; // '"(?i)u(?-i)ser":"([^"]+).+?(?i)rawIdentity":"([^"]+)(?-i)'; //.+?RawIdentity":"(?:[^"]+)
+  // const regex = '"(?i)u(?-i)ser":"([^"]+).+?(?i)rawIdentity":"([^"]+)(?-i)';
 
   const re = new RE2(regex, 'g');
-  const re2 = new RE2((undefined as unknown) as string, 'g');
 
-  const isMatch2 = re2.test(text);
-  console.log('INFO: test -> ', isMatch2);
+  // undefined
+  const isMatchUndef = new RE2((undefined as unknown) as string, 'g').test(
+    text
+  );
+  console.log('INFO: test RE2(undef) -> ', isMatchUndef);
 
-  const isMatch = re.test(text);
-  console.log('INFO: test -> ', isMatch);
+  const matchedUndef = new RE2(regex, 'g').exec(
+    (undefined as unknown) as string
+  );
+  console.log('INFO: exec RE2(undef) -> ', matchedUndef);
 
-  const matched2 = re2.exec(text);
-  console.log('INFO: exec -> ', matched2);
+  // undefined with undefined
+  const isMatchUndef1 = new RE2((undefined as unknown) as string, 'g').test(
+    (undefined as unknown) as string
+  );
+  console.log('INFO: test RE2(undef) with str undefined -> ', isMatchUndef1);
 
+  const matchedUndef1 = new RE2((undefined as unknown) as string, 'g').exec(
+    (undefined as unknown) as string
+  );
+  console.log('INFO: exec RE2(undef) with str undefined -> ', matchedUndef1);
+
+  // null
+  const isMatchNull = new RE2((null as unknown) as string, 'g').test(text);
+  console.log('INFO: test RE2(null) -> ', isMatchNull);
+
+  const matchedNull = new RE2(regex, 'g').exec((null as unknown) as string);
+  console.log('INFO: exec RE2(null) -> ', matchedNull);
+
+  // null with null
+  const isMatchNull1 = new RE2((null as unknown) as string, 'g').test(
+    (null as unknown) as string
+  );
+  console.log('INFO: test RE2(null) with str null -> ', isMatchNull1);
+
+  const matchedNull1 = new RE2((null as unknown) as string, 'g').exec(
+    (null as unknown) as string
+  );
+  console.log('INFO: exec RE2(null) with str null -> ', matchedNull1);
+
+  // standart
   const matched = re.exec(text);
   console.log('INFO: exec -> ', matched);
 
