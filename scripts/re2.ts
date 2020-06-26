@@ -9,7 +9,7 @@ export class RE2 {
   constructor(regex: string, flag?: string) {
     //just like RegExp // maybe we want return undef or null throw exeption
     // if null => /null/
-    if (regex === undefined) {
+    if (regex === undefined || regex.length === 0) {
       this.regex = '(?:)'; // like new RegExp(undefined)
       return this;
     }

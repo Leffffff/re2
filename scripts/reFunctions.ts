@@ -61,7 +61,7 @@ export const execRegex = (
   }
 
   freeUpMemory(module, textPointer, regexPointer);
-  return array;
+  return array[0][0] ? array : [];
 };
 
 export const replaceString = ({
