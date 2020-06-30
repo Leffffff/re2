@@ -8,7 +8,7 @@ import { RE2 } from '../scripts/re2';
   // '/p/thumb/AAt5fPx4gUQkQ_kc-8ZEiyxwrQqdn-HTKq1wdVkI9RNOUtqsvMmLaBkzmQVR8q5lht6IJgMR0_MIOnWND87ttldfsdZLeiuo4asvCShEnsSK5NYt792f5DmLKnkyyLPqZRyppsF8aJS5L3jh-dWbEcuGWPSBy-I6C1A27vDMqVvSsoIKVbiwOGOKsdJAfyOZrkfpMjGzPLlZe5pbEhne5oolPuf8MRTpZL4gV4H88XSZXFg2H7-oLq99ESq6-26ROdBQw5QrGmGO73AMyoFaOR7bDlcxmImX5uRG0-Q8Qnjgo1Ujho-smq6WIB_3pLkxqzXgTWTnYUPr9wn4uioSJWd-y43VClYPdDUCFd3UIY6nR8vLLwKlTUdnvsYk9AGYp5Imkwe_VHznpJcswYQmJhx-/p.png';
 
   // const regex = '/p/(?:pdf|thumb)(?:_txt|thumb.+?size=|/)'; // '"(.+?)": "(.+?)"'; // '/p/(?:pdf|thumb)(?:_txt|thumb.+?size=|/)'; // '"(.+?)": "(.+?)"'; // '"(?i)u(?-i)ser":"([^"]+).+?(?i)rawIdentity":"([^"]+)(?-i)'; //.+?RawIdentity":"(?:[^"]+)
-  const regex = '"(?i)u(?-i)ser":"([^"]*).+?(?i)rawIdentity":"([^"]+)(?-i)';
+  const regex = 'RawIdentity":"(?:[^"]+)'; //.+"(?i)u(?-i)ser":"([^"]*).+?(?i)rawIdentity":"([^"]+)(?-i).+
   const re = new RE2(regex, 'g');
 
   // standart
