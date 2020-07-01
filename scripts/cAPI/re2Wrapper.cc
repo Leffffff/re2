@@ -14,32 +14,34 @@ extern "C"
         return stringPtr;
     }
 
-    int getNumberOfCapturingGroups(char *inputRegex)
+    int getQtyOfCapturingGroups(char *inputRegex)
     {
         return re2::RE2(inputRegex).NumberOfCapturingGroups() + 1;
     }
 
-    int getCountOfGroups(char *inputString, char *inputRegex, char* flag)
+    int getQtyOfMatchedGroups(char *inputString, char *inputRegex, char *flag)
     {
-        if(*flag != 'g') return 1;
+        if (*flag != 'g')
+            return 1;
         re2::StringPiece sp(inputString);
         re2::RE2 regex(inputRegex);
 
-        int n = getNumberOfCapturingGroups(inputRegex);
+        int n = getQtyOfCapturingGroups(inputRegex);
         std::vector<re2::StringPiece> groups(n);
 
         int count = 0,
-            lastIndex = 0; 
-            
-        while(regex.Match(sp, lastIndex, sp.size(), re2::RE2::UNANCHORED, &(groups[0]), groups.size())) {
+            lastIndex = 0;
+
+        while (regex.Match(sp, lastIndex, sp.size(), re2::RE2::UNANCHORED, &(groups[0]), groups.size()))
+        {
             lastIndex += groups[0].data() - sp.data() + groups[0].size() - lastIndex;
             count++;
         }
-            
+
         return count;
     }
 
-    char *getStringPtrByIndex(char ***stringArray, int raw, int columns)
+    char *getStringPtrFromMatrix(char ***stringArray, int raw, int columns)
     {
         return stringArray[raw][columns];
     }
@@ -65,24 +67,25 @@ extern "C"
         return regex.ok() ? nullptr : getStringPtr(regex.error());
     }
 
-    void *exec(char *inputString, char *inputRegex, char* flag)
+    void *exec(char *inputString, char *inputRegex, char *flag)
     {
         re2::StringPiece sp(inputString);
         re2::RE2 regex(inputRegex);
 
-        int n = getNumberOfCapturingGroups(inputRegex);
+        int n = getQtyOfCapturingGroups(inputRegex);
         std::vector<re2::StringPiece> groups(n);
 
-        if (!check(inputString, inputRegex)) return nullptr;
+        if (!check(inputString, inputRegex))
+            return nullptr;
 
-        int nn = getCountOfGroups(inputString, inputRegex, flag);
+        int nn = getQtyOfMatchedGroups(inputString, inputRegex, flag);
         char ***result = new char **[nn];
-        int count = 0, 
+        int count = 0,
             lastIndex = 0;
 
-        while(regex.Match(sp, lastIndex, sp.size(), re2::RE2::UNANCHORED, &(groups[0]), groups.size())) 
+        while (regex.Match(sp, lastIndex, sp.size(), re2::RE2::UNANCHORED, &(groups[0]), groups.size()))
         {
-            result[count] = new char*[n];
+            result[count] = new char *[n];
             for (int i = 0; i < n; ++i)
             {
                 const size_t size = groups[i].size();
@@ -91,7 +94,8 @@ extern "C"
                 result[count][i][size] = '\0';
             }
 
-            if(*flag != 'g') break;
+            if (*flag != 'g')
+                break;
 
             lastIndex += groups[0].data() - sp.data() + groups[0].size() - lastIndex;
             count++;

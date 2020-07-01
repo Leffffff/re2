@@ -1,94 +1,83 @@
 import { isNullOrUndefined } from 'util';
-import { freeUpMemory, getPointers, getStringsFromPointerArray } from './utils';
+import { freeUpMemory, getPointers, getStringArray } from './utils';
 
 export const testRegex = (
-  module: Module,
+  re2: RegExp2,
   text: string,
   regex: string
 ): boolean => {
-  if (isNullOrUndefined(text)) text = `${text}`; // RegExp works with null or undefined like just strings 'null' or 'undefined'
-  const [textPointer, regexPointer] = getPointers(module, text, regex);
+  if (isNullOrUndefined(text)) text = `${text}`;
+  const [textPointer, regexPointer] = getPointers(re2, text, regex);
 
-  const isFulfilled = !!module._check(textPointer, regexPointer);
+  const isFulfilled = !!re2._check(textPointer, regexPointer);
 
-  freeUpMemory(module, textPointer, regexPointer);
+  freeUpMemory(re2, textPointer, regexPointer);
   return isFulfilled;
 };
 
-const isEmpty = (el: string): boolean => el.length > 0;
-
 export const execRegex = (
-  module: Module,
+  re2: RegExp2,
   text: string,
   regex: string,
   flag = ''
 ): string[][] => {
-  if (isNullOrUndefined(text)) text = `${text}`; // RegExp works with text = null or undefined as text like just strings 'null' or 'undefined'
-  const [regexPointer] = getPointers(module, `(${regex})`);
-  let [textPointer] = getPointers(module, text);
+  if (isNullOrUndefined(text)) text = `${text}`;
+  const [textPointer, regexPointer, flagPointer] = getPointers(
+    re2,
+    text,
+    regex,
+    flag
+  );
 
-  const captureGroups = module._getNumberOfCapturingGroups(regexPointer);
+  const captureGroups = re2._getQtyOfCapturingGroups(regexPointer);
   if (captureGroups < 0) throw Error('Error with groups');
 
-  if (captureGroups === 0) return []; // Regex doesn't have capture group(s)
+  if (captureGroups === 0) return [];
 
-  const array: string[][] = [];
-  if (flag === 'g') {
-    while (true) {
-      textPointer = getPointers(module, text)[0];
-      const arrayPointer = module._getCapturingGroups(
-        textPointer,
-        regexPointer
-      );
-      if (arrayPointer === 0) break;
+  const arrayPointer = re2._exec(textPointer, regexPointer, flagPointer);
 
-      const [fullMatch, ...rest] = getStringsFromPointerArray(
-        module,
-        arrayPointer,
-        captureGroups
-      );
-      array.push(rest.filter(isEmpty));
-      text = text.slice(text.indexOf(fullMatch) + fullMatch.length);
-    }
-  } else {
-    const arrayPointer = module._getCapturingGroups(textPointer, regexPointer);
-    const stringArray = getStringsFromPointerArray(
-      module,
-      arrayPointer,
-      captureGroups
-    );
-    array.push(stringArray.filter(isEmpty));
-  }
+  const getCountOfGroups = re2._getQtyOfMatchedGroups(
+    textPointer,
+    regexPointer,
+    flagPointer
+  );
 
-  freeUpMemory(module, textPointer, regexPointer);
-  return array[0][0] ? array : [];
+  const matched = getStringArray(
+    re2,
+    arrayPointer,
+    getCountOfGroups,
+    captureGroups
+  );
+
+  freeUpMemory(re2, textPointer, regexPointer, arrayPointer, flagPointer);
+  return matched;
 };
 
 export const replaceString = ({
-  module,
+  re2,
   baseText,
   regex,
   rewrite,
   flag = '',
 }: ReplaceInput): string => {
   const [textPointer, regexPointer, rewritePointer, flagPointer] = getPointers(
-    module,
+    re2,
     baseText,
     regex,
     rewrite,
     flag
   );
 
-  const replacedStringPointer = module._replace(
+  const replacedStringPointer = re2._replace(
     textPointer,
     regexPointer,
     rewritePointer,
     flagPointer
   );
-  const replacedString = module.UTF8ToString(replacedStringPointer);
+  const replacedString = re2.UTF8ToString(replacedStringPointer);
 
   freeUpMemory(
-    module,
+    re2,
     textPointer,
     regexPointer,
     rewritePointer,

@@ -1,6 +1,6 @@
 type Pointer = number;
 
-type Module = {
+type RegExp2 = {
   /** @function _malloc : allocates memory and returns address. */
   _malloc(len: number): number;
 
@@ -16,14 +16,25 @@ type Module = {
   /** @function _validate : validates regex by address and return address to status of validation. */
   _validate(ptr: Pointer): Pointer;
 
-  /** @function _getNumberOfCapturingGroups : returns number of capture groups. */
-  _getNumberOfCapturingGroups(ptr: Pointer): number;
+  /** @function _getQtyOfCapturingGroups : returns number of capture groups. */
+  _getQtyOfCapturingGroups(ptr: Pointer): number;
 
-  /** @function _getCapturingGroups : returns address to array of groups. */
-  _getCapturingGroups(sPtr: Pointer, rePtr: Pointer): Pointer;
+  /** @function _exec : returns address to array of groups. */
+  _exec(sPtr: Pointer, rePtr: Pointer, flagP: Pointer): Pointer;
 
-  /** @function _getStringPtrByIndex : returns address of array element by index. */
-  _getStringPtrByIndex(arrayPtr: Pointer, index: number): Pointer;
+  /** @function _getStringPtrFromMatrix : returns address of array element by index. */
+  _getStringPtrFromMatrix(
+    arrayPtr: Pointer,
+    raw: number,
+    column: number
+  ): Pointer;
+
+  /** @function _getQtyOfMatchedGroups : returns number of matched groups. */
+  _getQtyOfMatchedGroups(
+    textP: Pointer,
+    regexP: Pointer,
+    flagP: Pointer
+  ): number;
 
   /** @function _check : returns boolean if regex matches string. */
   _check(sPtr: Pointer, rePtr: Pointer): 0 | 1;
@@ -40,7 +51,7 @@ type Module = {
 type ReplaceParams = 'baseText' | 'regex' | 'rewrite' | 'flag';
 
 type ReplaceInput = {
-  module: Module;
+  re2: RegExp2;
 } & {
   [k in ReplaceParams]: string;
 };

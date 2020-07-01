@@ -6,7 +6,6 @@
   "types": "./lib/scripts/re2.d.ts",
   "scripts": {
     "test": "npx tsc && node lib/tests/test.js",
-    "source": "source ../emsdk/emsdk_env.sh",
     "compile": "./compile.sh",
     "basement": "npx tsc && node lib/scripts/updateBuild.js",
     "build:update": "npm run basement && npm run compile && npm test"

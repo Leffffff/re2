@@ -1,37 +1,38 @@
-export const freeUpMemory = (module: Module, ...ptrs: Pointer[]): void =>
-  ptrs.forEach(module._free);
+export const freeUpMemory = (re2: RegExp2, ...ptrs: Pointer[]): void =>
+  ptrs.forEach(re2._free);
 
-export const stringOnWasmHeap = (module: Module) => (
-  string: string
-): Pointer => {
-  const ptr = module._malloc(string.length + 1);
-  module.stringToUTF8(string, ptr, string.length + 1);
+export const stringOnWasmHeap = (re2: RegExp2) => (string: string): Pointer => {
+  const ptr = re2._malloc(string.length + 1);
+  re2.stringToUTF8(string, ptr, string.length + 1);
   return ptr;
 };
 
-export const getPointers = (module: Module, ...values: string[]): Pointer[] =>
-  values.map(stringOnWasmHeap(module));
+export const getPointers = (re2: RegExp2, ...values: string[]): Pointer[] =>
+  values.map(stringOnWasmHeap(re2));
 
-export const getStringsFromPointerArray = (
-  module: Module,
-  arrayPointer: number,
+export const getStringArray = (
+  re2: RegExp2,
+  arrayPointer: Pointer,
+  getCountOfGroups: number,
   captureGroups: number
-): string[] => {
-  const arr: string[] = [];
-  for (let i = 0; i < captureGroups; ++i) {
-    const stringPtr = module._getStringPtrByIndex(arrayPointer, i);
-    const string = module.UTF8ToString(stringPtr);
-    freeUpMemory(module, stringPtr);
-    arr.push(string);
+): string[][] => {
+  const arr = [];
+  for (let i = 0; i < getCountOfGroups; ++i) {
+    const arr2 = [];
+    for (let j = 0; j < captureGroups; ++j) {
+      const stringPtr = re2._getStringPtrFromMatrix(arrayPointer, i, j);
+      const string = re2.UTF8ToString(stringPtr);
+      arr2.push(string);
+    }
+    arr.push(arr2);
   }
-  freeUpMemory(module, arrayPointer);
-  return arr || [];
+  return arr;
 };
 
-export const validate = (module: Module, regex: string): void => {
-  const [regexPointer] = getPointers(module, regex);
-  const statusPointer = module._validate(regexPointer);
-  if (statusPointer !== 0) throw Error(module.UTF8ToString(statusPointer));
+export const validate = (re2: RegExp2, regex: string): void => {
+  const [regexPointer] = getPointers(re2, regex);
+  const statusPointer = re2._validate(regexPointer);
+  if (statusPointer !== 0) throw Error(re2.UTF8ToString(statusPointer));
 
-  freeUpMemory(module, regexPointer, statusPointer);
+  freeUpMemory(re2, regexPointer, statusPointer);
 };
