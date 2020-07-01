@@ -17,27 +17,7 @@ import { RE2 } from '../scripts/re2';
 
   const matched = re.exec(text);
   console.log('INFO: exec -> ', matched);
-
-  const text2 =
-    'yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo';
-  const reRepl = new RE2('^', 'g');
-  console.log('INFO: replace -> ', reRepl.replace(text2, 'New string: '));
-
-  const reRepl2 = new RE2('(\\w+?)&.+?&(\\w+)', 'g');
-  console.log('INFO: replace -> ', reRepl2.replace(text2, '\\2 \\1'));
-
-  const reRepl3 = new RE2('(\\w+?)&.+?&(\\w+)', 'g');
-  console.log('INFO: replace -> ', reRepl3.replace(text2, '\\2 \\1'));
-
-  const n = re.numberOfCaptureGroups();
-  console.log('INFO: numberOfCaptureGroups -> ', n);
-  console.log(
-    'INFO: numberOfCaptureGroups -> ',
-    new RE2(
-      `(?:%2[27]|['"])(?:qwe)(?:%2[27]|['"])(?:%3A|:)(?:\\+|\\s)*(?:(?:%2[27]|['"])(.+?)(?:%2[27]|['"])|(.+?)(?:[,}\\]]|%2C|%[75]D))`
-    ).numberOfCaptureGroups()
-  );
-
+  
   // undefined
   const isMatchUndef = new RE2((undefined as unknown) as string, 'g').test(
     text

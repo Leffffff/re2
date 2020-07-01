@@ -1,7 +1,7 @@
 import { strict } from 'assert';
 import { RE2 } from '../scripts/re2';
 ((): void => {
-  //test 1
+  console.log("test 1")
   const reReplace1 = new RE2('(?i)apples', 'g');
   const resultReplace1 = reReplace1.replace(
     'Apples are round, and apples are juicy.',
@@ -10,7 +10,7 @@ import { RE2 } from '../scripts/re2';
   strict.equal(resultReplace1, 'oranges are round, and oranges are juicy.');
   console.log(resultReplace1);
 
-  //test 2
+  console.log("test 2")
   const reReplace2 = new RE2('(?i)xmas');
   const resultReplace2 = reReplace2.replace(
     'Twas the night before Xmas...',
@@ -19,13 +19,13 @@ import { RE2 } from '../scripts/re2';
   strict.equal(resultReplace2, 'Twas the night before Christmas...');
   console.log(resultReplace2);
 
-  //test 3
+  console.log("test 3")
   const reReplace3 = new RE2('(\\w+)\\s(\\w+)');
   const resultReplace3 = reReplace3.replace('John Smith', '\\2, \\1');
   strict.equal(resultReplace3, 'Smith, John');
   console.log(resultReplace3);
 
-  //test 4
+  console.log("test 4")
   const reReplace4 = new RE2('([^\\d]*)(\\d*)([^\\w]*)');
   const p1 = '\\1';
   const p2 = '\\2';
@@ -36,4 +36,13 @@ import { RE2 } from '../scripts/re2';
   );
   strict.equal(resultReplace4, 'abc - 12345 - #$*%');
   console.log(resultReplace4);
+
+  console.log("test 5")
+  const textReplace5 =
+    'yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo';
+  const reReplace5 = new RE2('(\\w+?)&.+?&(\\w+)', 'g');
+  const resultReplace5 = reReplace5.replace(textReplace5, '\\2 \\1');
+  strict.equal(resultReplace5, 'doo yabba doo yabba doo yabba doo yabba doo yabba');
+  console.log(resultReplace5);
+  
 })();
