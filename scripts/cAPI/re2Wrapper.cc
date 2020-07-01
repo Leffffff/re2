@@ -14,11 +14,6 @@ extern "C"
         return stringPtr;
     }
 
-    char *escapeMetaCharacter(char *inputText)
-    {
-        return getStringPtr(re2::RE2::QuoteMeta(inputText));
-    }
-    
     int getNumberOfCapturingGroups(char *inputRegex)
     {
         return re2::RE2(inputRegex).NumberOfCapturingGroups() + 1;
@@ -33,8 +28,9 @@ extern "C"
         int n = getNumberOfCapturingGroups(inputRegex);
         std::vector<re2::StringPiece> groups(n);
 
-        int count = 0;
-        int lastIndex = 0; 
+        int count = 0,
+            lastIndex = 0; 
+            
         while(regex.Match(sp, lastIndex, sp.size(), re2::RE2::UNANCHORED, &(groups[0]), groups.size())) {
             lastIndex += groups[0].data() - sp.data() + groups[0].size() - lastIndex;
             count++;
