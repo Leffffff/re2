@@ -35,7 +35,7 @@ export const execRegex = (
   if (captureGroups === 0) return [];
 
   const arrayPointer = re2._exec(textPointer, regexPointer, flagPointer);
-  if(arrayPointer === 0) return [];
+  if (arrayPointer === 0) return [];
 
   const getCountOfGroups = re2._getQtyOfMatchedGroups(
     textPointer,
