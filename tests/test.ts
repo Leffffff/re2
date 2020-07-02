@@ -17,7 +17,7 @@ import { RE2 } from '../scripts/re2';
 
   const matched = re.exec(text);
   console.log('INFO: exec -> ', matched);
-  
+
   // undefined
   const isMatchUndef = new RE2((undefined as unknown) as string, 'g').test(
     text
