@@ -2,8 +2,9 @@ export const freeUpMemory = (re2: RegExp2, ...ptrs: Pointer[]): void =>
   ptrs.forEach(re2._free);
 
 export const stringOnWasmHeap = (re2: RegExp2) => (string: string): Pointer => {
-  const ptr = re2._malloc(string.length + 1);
-  re2.stringToUTF8(string, ptr, string.length + 1);
+  const size = string.length + 1;
+  const ptr = re2._malloc(size);
+  re2.stringToUTF8(string, ptr, size);
   return ptr;
 };
 
@@ -17,9 +18,9 @@ export const getStringArray = (
   captureGroups: number
 ): string[][] => {
   const arr = [];
-  for (let i = 0; i < getCountOfGroups; ++i) {
+  for (let i = 0; i < getCountOfGroups; i += 1) {
     const arr2 = [];
-    for (let j = 0; j < captureGroups; ++j) {
+    for (let j = 0; j < captureGroups; j += 1) {
       const stringPtr = re2._getStringPtrFromMatrix(arrayPointer, i, j);
       const string = re2.UTF8ToString(stringPtr);
       arr2.push(string);

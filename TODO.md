@@ -1,3 +1,3 @@
 # Todo list
 
-1. Do something with strange regex in scripts/util.ts -> '(.+?)\\((?:[^?]|[^?][^-i:]).+?\\)'
+1. Think about behavior of regex if the input will be null/undefined.

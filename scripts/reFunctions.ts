@@ -20,7 +20,7 @@ export const execRegex = (
   text: string,
   regex: string,
   flag = ''
-): string[][] => {
+): string[][] | null => {
   if (isNullOrUndefined(text)) text = `${text}`;
   const [textPointer, regexPointer, flagPointer] = getPointers(
     re2,
@@ -32,12 +32,12 @@ export const execRegex = (
   const captureGroups = re2._getQtyOfCapturingGroups(regexPointer);
   if (captureGroups < 0) throw Error('Error with groups');
 
-  if (captureGroups === 0) return [];
+  if (captureGroups === 0) return null;
 
   const arrayPointer = re2._exec(textPointer, regexPointer, flagPointer);
-  if (arrayPointer === 0) return [];
+  if (arrayPointer === 0) return null;
 
-  const getCountOfGroups = re2._getQtyOfMatchedGroups(
+  const matchedGroups = re2._getQtyOfMatchedGroups(
     textPointer,
     regexPointer,
     flagPointer
@@ -46,7 +46,7 @@ export const execRegex = (
   const matched = getStringArray(
     re2,
     arrayPointer,
-    getCountOfGroups,
+    matchedGroups,
     captureGroups
   );
 
