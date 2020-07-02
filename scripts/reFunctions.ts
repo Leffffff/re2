@@ -61,6 +61,8 @@ export const replaceString = ({
   rewrite,
   flag = '',
 }: ReplaceInput): string => {
+  if (isNullOrUndefined(baseText)) baseText = `${baseText}`;
+  if (isNullOrUndefined(rewrite)) rewrite = `${rewrite}`;
   const [textPointer, regexPointer, rewritePointer, flagPointer] = getPointers(
     re2,
     baseText,

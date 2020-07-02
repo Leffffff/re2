@@ -26,7 +26,7 @@ import { RE2 } from '../scripts/re2';
   console.log(resultTest3);
 
   console.log('test 4');
-  const reTest4 = new RE2((undefined as unknown) as string);
+  const reTest4 = new RE2((undefined as unknown) as string); //maybe need refact
   const resultTest4 = reTest4.test(
     'Every Hunter Wants to Know Where the Pheasant Sits'
   );
@@ -40,7 +40,7 @@ import { RE2 } from '../scripts/re2';
   console.log(resultTest5);
 
   console.log('test 6');
-  const reTest6 = new RE2((undefined as unknown) as string);
+  const reTest6 = new RE2((undefined as unknown) as string); //maybe need refact
   const resultTest6 = reTest6.test((undefined as unknown) as string);
   strict.equal(resultTest6, true);
   console.log(resultTest6);
@@ -50,4 +50,24 @@ import { RE2 } from '../scripts/re2';
   const resultTest7 = reTest7.test('asdfghjkl;zxcvbnm1234567890');
   strict.equal(resultTest7, true);
   console.log(resultTest7);
+
+  console.log('test 8');
+  const reTest8 = new RE2((null as unknown) as string); //maybe need refact
+  const resultTest8 = reTest8.test(
+    'Every Hunter Wants to Know Where the Pheasant Sits'
+  );
+  strict.equal(resultTest8, false);
+  console.log(resultTest8);
+
+  console.log('test 9');
+  const reTest9 = new RE2('(?i)hunter\\swants.+?where');
+  const resultTest9 = reTest9.test((null as unknown) as string);
+  strict.equal(resultTest9, false);
+  console.log(resultTest9);
+
+  console.log('test 10');
+  const reTest10 = new RE2((null as unknown) as string); //maybe need refact
+  const resultTest10 = reTest10.test((null as unknown) as string);
+  strict.equal(resultTest10, true);
+  console.log(resultTest10);
 })();
