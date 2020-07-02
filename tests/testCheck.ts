@@ -8,7 +8,7 @@ export const testCheck = (): void => {
   const resultTest1 = reTest1.test(
     'The Quick Brown Fox Jumps Over The Lazy Dog'
   );
-  strict.equal(resultTest1, false);
+  strict.strictEqual(resultTest1, false);
   console.log(resultTest1);
 
   console.log('test 2');
@@ -16,7 +16,7 @@ export const testCheck = (): void => {
   const resultTest2 = reTest2.test(
     'The Quick Brown Fox Jumps Over The Lazy Dog'
   );
-  strict.equal(resultTest2, true);
+  strict.strictEqual(resultTest2, true);
   console.log(resultTest2);
 
   console.log('test 3');
@@ -24,13 +24,13 @@ export const testCheck = (): void => {
   const resultTest3 = reTest3.test(
     'THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG'
   );
-  strict.equal(resultTest3, false);
+  strict.strictEqual(resultTest3, false);
   console.log(resultTest3);
 
   console.log('test 4');
   const reTest4 = new RE2('');
   const resultTest4 = reTest4.test('asdfghjkl;zxcvbnm1234567890');
-  strict.equal(resultTest4, true);
+  strict.strictEqual(resultTest4, true);
   console.log(resultTest4);
 
   console.log();

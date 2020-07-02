@@ -1,3 +1,4 @@
+import * as chalk from 'chalk';
 import { testCheck } from './testCheck';
 import { testExec } from './testExec';
 import { testReplace } from './testReplace';
@@ -6,5 +7,5 @@ import { testReplace } from './testReplace';
   testCheck();
   testExec();
   testReplace();
-  console.log('All tests passed!');
+  console.log(chalk.green('All tests passed!'));
 })();

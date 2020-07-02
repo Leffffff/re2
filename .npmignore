@@ -8,6 +8,8 @@ basement/
 .eslintrc.yaml
 re2Wrapper.cc
 *.md
+lib/tests/
 tests/
 scripts/
+compile.sh
 tsconfig.json

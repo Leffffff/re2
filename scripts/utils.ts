@@ -1,6 +1,12 @@
+import * as chalk from 'chalk';
+
 export const errorHandler = (value: unknown, message: string): void => {
   if (typeof value !== 'string')
-    throw Error(`${message} ${value === null ? null : typeof value}.`);
+    throw Error(
+      chalk.red(
+        `${message} ${chalk.underline(value === null ? null : typeof value)}.`
+      )
+    );
 };
 
 export const freeUpMemory = (re2: RegExp2, ...ptrs: Pointer[]): void =>

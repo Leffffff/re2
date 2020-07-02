@@ -10,7 +10,10 @@ export const testReplace = (): void => {
     'Apples are round, and apples are juicy.',
     'oranges'
   );
-  strict.equal(resultReplace1, 'oranges are round, and oranges are juicy.');
+  strict.strictEqual(
+    resultReplace1,
+    'oranges are round, and oranges are juicy.'
+  );
   console.log(resultReplace1);
 
   console.log('test 2');
@@ -19,13 +22,13 @@ export const testReplace = (): void => {
     'Twas the night before Xmas...',
     'Christmas'
   );
-  strict.equal(resultReplace2, 'Twas the night before Christmas...');
+  strict.strictEqual(resultReplace2, 'Twas the night before Christmas...');
   console.log(resultReplace2);
 
   console.log('test 3');
   const reReplace3 = new RE2('(\\w+)\\s(\\w+)');
   const resultReplace3 = reReplace3.replace('John Smith', '\\2, \\1');
-  strict.equal(resultReplace3, 'Smith, John');
+  strict.strictEqual(resultReplace3, 'Smith, John');
   console.log(resultReplace3);
 
   console.log('test 4');
@@ -37,7 +40,7 @@ export const testReplace = (): void => {
     'abc12345#$*%',
     [p1, p2, p3].join(' - ')
   );
-  strict.equal(resultReplace4, 'abc - 12345 - #$*%');
+  strict.strictEqual(resultReplace4, 'abc - 12345 - #$*%');
   console.log(resultReplace4);
 
   console.log('test 5');
@@ -45,7 +48,7 @@ export const testReplace = (): void => {
     'yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo yabba& dabba &doo';
   const reReplace5 = new RE2('(\\w+?)&.+?&(\\w+)', 'g');
   const resultReplace5 = reReplace5.replace(textReplace5, '\\2 \\1');
-  strict.equal(
+  strict.strictEqual(
     resultReplace5,
     'doo yabba doo yabba doo yabba doo yabba doo yabba'
   );
