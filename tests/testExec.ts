@@ -89,7 +89,7 @@ import { RE2 } from '../scripts/re2';
   console.log("test 11")
   const reExec11 = new RE2('(?i)hunter\\s(wants).+?(where)') ;
   const resultExec11 = reExec11.exec(undefined as unknown as string);
-  strict.equal(resultExec11[0][0] && resultExec11[0][1] && resultExec11[0][2], '');
+  strict.equal(resultExec11.length, 0);
   console.log(resultExec11);
 
   console.log("test 12")
