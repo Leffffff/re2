@@ -1,3 +1,5 @@
 # Todo list
 
-1. Think about behavior of regex if the input will be null/undefined.
+1. Delete useless console.log in tests
+
+2. Refactor
