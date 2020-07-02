@@ -1,5 +1,5 @@
 import { execRegex, replaceString, testRegex } from './reFunctions';
-import { freeUpMemory, getPointers, validate } from './utils';
+import { errorHandler, freeUpMemory, getPointers, validate } from './utils';
 
 const re2Module = require('../../bin/re2Lib') as RegExp2;
 export class RE2 {
@@ -7,15 +7,8 @@ export class RE2 {
   private flag?: string;
 
   constructor(regex: string, flag?: string) {
-    // just like RegExp
-    if (regex === null) {
-      this.regex = `${regex}`;
-      return this;
-    }
-    if (regex === undefined || regex.length === 0) {
-      this.regex = '(?:)';
-      return this;
-    }
+    errorHandler(regex, 'Regular expression can not be');
+
     validate(re2Module, regex);
     this.regex = regex;
     this.flag = flag;
@@ -45,4 +38,15 @@ export class RE2 {
       rewrite,
       flag: this.flag || '',
     });
+
+  /** @static @function validate : re2 validation over regex */
+  static validate = (regex: string): string => {
+    const [regexPointer] = getPointers(re2Module, regex);
+    const statusPointer = re2Module._validate(regexPointer);
+
+    freeUpMemory(re2Module, regexPointer, statusPointer);
+    return statusPointer === 0
+      ? 'ok'
+      : `Error in '${regex}': ${re2Module.UTF8ToString(statusPointer)}`;
+  };
 }

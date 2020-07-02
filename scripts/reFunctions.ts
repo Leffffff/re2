@@ -1,12 +1,17 @@
-import { isNullOrUndefined } from 'util';
-import { freeUpMemory, getPointers, getStringArray } from './utils';
+import {
+  errorHandler,
+  freeUpMemory,
+  getPointers,
+  getStringArray,
+} from './utils';
 
 export const testRegex = (
   re2: RegExp2,
   text: string,
   regex: string
 ): boolean => {
-  if (isNullOrUndefined(text)) text = `${text}`;
+  errorHandler(text, 'Input text can not be');
+
   const [textPointer, regexPointer] = getPointers(re2, text, regex);
 
   const isFulfilled = !!re2._check(textPointer, regexPointer);
@@ -21,7 +26,8 @@ export const execRegex = (
   regex: string,
   flag = ''
 ): string[][] | null => {
-  if (isNullOrUndefined(text)) text = `${text}`;
+  errorHandler(text, 'Input text can not be');
+
   const [textPointer, regexPointer, flagPointer] = getPointers(
     re2,
     text,
@@ -61,8 +67,9 @@ export const replaceString = ({
   rewrite,
   flag = '',
 }: ReplaceInput): string => {
-  if (isNullOrUndefined(baseText)) baseText = `${baseText}`;
-  if (isNullOrUndefined(rewrite)) rewrite = `${rewrite}`;
+  errorHandler(baseText, 'Input text can not be');
+  errorHandler(rewrite, 'Replacement string can not be');
+
   const [textPointer, regexPointer, rewritePointer, flagPointer] = getPointers(
     re2,
     baseText,
