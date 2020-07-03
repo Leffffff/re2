@@ -5,7 +5,7 @@
   "main": "./lib/scripts/re2.js",
   "types": "./lib/scripts/re2.d.ts",
   "scripts": {
-    "test": "npx tsc && node lib/tests/test.js",
+    "test": "npx tsc && jest",
     "compile": "./compile.sh",
     "basement": "npx tsc && node lib/scripts/updateBuild.js",
     "build:update": "npm run basement && npm run compile && npm test"
@@ -18,7 +18,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^4.1.0"
+    "@types/jest": "^26.0.3",
+    "chalk": "^4.1.0",
+    "jest": "^26.1.0",
+    "ts-jest": "^26.1.1"
   },
   "devDependencies": {
     "@types/node": "^13.13.12",
@@ -31,5 +34,21 @@
     "eslint-plugin-prettier": "^3.1.1",
     "prettier": "^1.19.1",
     "typescript": "3.8.3"
+  },
+  "jest": {
+    "transform": {
+      "\\.ts$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js|ts)x?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "testPathIgnorePatterns": [
+      "/lib/",
+      "/node_modules/",
+      "/bin/"
+    ]
   }
 }
