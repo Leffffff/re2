@@ -23,8 +23,10 @@ extern "C"
         return re2::RE2(inputRegex).NumberOfCapturingGroups() + 1;
     }
 
-    // Return the number of matched groups, this work only for regex with flag global 'g'
-    // Example: we have text string '123abc123abc123' and regex '(abc)', with flag global getQtyOfMatchedGroups() return 2, without function return 1  
+    // Return the number of matched groups
+    // Example:
+    // getQtyOfMatchedGroups('123abc123abc123', '(abc)', 'g') return 2
+    // getQtyOfMatchedGroups('123abc123abc123', '(abc)', '') return 1
     int getQtyOfMatchedGroups(char *inputString, char *inputRegex, char *flag)
     {
         if (*flag != 'g')
@@ -46,47 +48,32 @@ extern "C"
 
         return count;
     }
+
+    // Additional function for getting pointers from matrix.
     char *getStringPtrFromMatrix(char ***stringArray, int raw, int columns)
     {
         return stringArray[raw][columns];
     }
 
-    // The "FullMatch" operation checks that supplied text matches a
-    // supplied pattern exactly.
-    // Example: simple search for a string:
-    // TRUE check(("hello", "ell"));
-    // FALSE check(("hello", "123"));
+    // Checks that supplied text matches a
+    // supplied regex exactly.
+    // Example:
+    // check("hello", "ell"); return TRUE
+    // check("hello", "123"); return FALSE
     bool check(char *text, char *regex)
     {
         return re2::RE2::PartialMatch(text, regex);
     }
-    // Replace the first match of "re" in "str" with "rewrite".
-    // Within "rewrite", backslash-escaped digits (\1 to \9) can be
-    // used to insert text matching corresponding parenthesized group
-    // from the pattern.  \0 in "rewrite" refers to the entire matching
-    // text.  E.g.,
-    //
-    //   std::string s = "yabba dabba doo";
-    //   CHECK(RE2::Replace(&s, "b+", "d"));
-    //
-    // will leave "s" containing "yada dabba doo"
-    //
-    // Returns true if the pattern matches and a replacement occurs,
-    // false otherwise.
 
-    // Like Replace(), except replaces successive non-overlapping occurrences
-    // of the pattern in the string with the rewrite. E.g.
-    //
-    //   std::string s = "yabba dabba doo";
-    //   CHECK(RE2::GlobalReplace(&s, "b+", "d"));
-    //
-    // will leave "s" containing "yada dada doo"
-    // Replacements are not subject to re-matching.
-    //
-    // Because GlobalReplace only replaces non-overlapping matches,
-    // replacing "ana" within "banana" makes only one replacement, not two.
-    //
-    // Returns the number of replacements made.
+    // Replace the first match of "regex" in "text" with "rewrite".
+    // Example: simple replace:
+    // replace('XMAS : Twas the night before Xmas...', '(?i)xmas', 'Christmas', '')
+    // return 'Christmas : Twas the night before Xmas...')
+    // 
+    // With flag global replace all matches of "regex" in "text" with "rewrite".
+    // Example: simple replace with flag global:
+    // replace('XMAS : Twas the night before Xmas...', '(?i)xmas', 'Christmas', 'g')
+    // return 'Christmas : Twas the night before Christmas...'
     char *replace(char *text, char *regex, char *rewrite, char *flag)
     {
         std::string replacedString = text;
@@ -97,12 +84,22 @@ extern "C"
         return getStringPtr(replacedString);
     }
 
+    // Return error message if regex invalid
     void *validate(char *regexp)
     {
         re2::RE2 regex(regexp);
         return regex.ok() ? nullptr : getStringPtr(regex.error());
     }
-
+    
+    // Capture the first match of "regex" in "text".
+    // Example: simple exec:
+    // exec('123abc123abc123', '(abc)', '')
+    // return [[abc, abc]]. First element is fullmatch, rest are captures
+    // 
+    // With flag global capture all matches of "regex" in "text".
+    // Example: simple exec with flag global:
+    // exec('123abc123abc123', '(abc)', 'g')
+    // return [[abc, abc], [abc, abc]]
     void *exec(char *inputString, char *inputRegex, char *flag)
     {
         re2::StringPiece sp(inputString);
@@ -132,13 +129,7 @@ extern "C"
 
             if (*flag != 'g')
                 break;
-            std::cout<< "lastIndex before = "<< lastIndex <<std::endl;
-            std::cout<< "groups[0].data() = "<< groups[0].data() <<std::endl;
-            std::cout<< "sp.data() = "<< sp.data() <<std::endl;
-            std::cout<< "groups[0].size() = "<< groups[0].size() <<std::endl;
-            std::cout<< "groups[0].data() - sp.data() = "<< groups[0].data() - sp.data() <<std::endl;
             lastIndex += groups[0].data() - sp.data() + groups[0].size() - lastIndex;
-            std::cout<< "lastIndex after = "<< lastIndex <<std::endl;
             count++;
         }
         return result;
