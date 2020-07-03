@@ -6,7 +6,9 @@
 #include <iostream>
 
 extern "C"
-{
+{ 
+    // Emscripten works only with C code, so instead string we use char*
+    // Return the pointer of input string
     char *getStringPtr(const std::string &inputString)
     {
         char *stringPtr = new char[inputString.length() + 1];
@@ -14,11 +16,15 @@ extern "C"
         return stringPtr;
     }
 
+    // Return the number of capturing subpatterns
+    // if the regexp is "(a)(b)", returns 2 + 1(do for fullcapture).
     int getQtyOfCapturingGroups(char *inputRegex)
     {
         return re2::RE2(inputRegex).NumberOfCapturingGroups() + 1;
     }
 
+    // Return the number of matched groups, this work only for regex with flag global 'g'
+    // Example: we have text string '123abc123abc123' and regex '(abc)', with flag global getQtyOfMatchedGroups() return 2, without function return 1  
     int getQtyOfMatchedGroups(char *inputString, char *inputRegex, char *flag)
     {
         if (*flag != 'g')
@@ -40,17 +46,47 @@ extern "C"
 
         return count;
     }
-
     char *getStringPtrFromMatrix(char ***stringArray, int raw, int columns)
     {
         return stringArray[raw][columns];
     }
 
+    // The "FullMatch" operation checks that supplied text matches a
+    // supplied pattern exactly.
+    // Example: simple search for a string:
+    // TRUE check(("hello", "ell"));
+    // FALSE check(("hello", "123"));
     bool check(char *text, char *regex)
     {
         return re2::RE2::PartialMatch(text, regex);
     }
+    // Replace the first match of "re" in "str" with "rewrite".
+    // Within "rewrite", backslash-escaped digits (\1 to \9) can be
+    // used to insert text matching corresponding parenthesized group
+    // from the pattern.  \0 in "rewrite" refers to the entire matching
+    // text.  E.g.,
+    //
+    //   std::string s = "yabba dabba doo";
+    //   CHECK(RE2::Replace(&s, "b+", "d"));
+    //
+    // will leave "s" containing "yada dabba doo"
+    //
+    // Returns true if the pattern matches and a replacement occurs,
+    // false otherwise.
 
+    // Like Replace(), except replaces successive non-overlapping occurrences
+    // of the pattern in the string with the rewrite. E.g.
+    //
+    //   std::string s = "yabba dabba doo";
+    //   CHECK(RE2::GlobalReplace(&s, "b+", "d"));
+    //
+    // will leave "s" containing "yada dada doo"
+    // Replacements are not subject to re-matching.
+    //
+    // Because GlobalReplace only replaces non-overlapping matches,
+    // replacing "ana" within "banana" makes only one replacement, not two.
+    //
+    // Returns the number of replacements made.
     char *replace(char *text, char *regex, char *rewrite, char *flag)
     {
         std::string replacedString = text;
@@ -96,8 +132,13 @@ extern "C"
 
             if (*flag != 'g')
                 break;
-
+            std::cout<< "lastIndex before = "<< lastIndex <<std::endl;
+            std::cout<< "groups[0].data() = "<< groups[0].data() <<std::endl;
+            std::cout<< "sp.data() = "<< sp.data() <<std::endl;
+            std::cout<< "groups[0].size() = "<< groups[0].size() <<std::endl;
+            std::cout<< "groups[0].data() - sp.data() = "<< groups[0].data() - sp.data() <<std::endl;
             lastIndex += groups[0].data() - sp.data() + groups[0].size() - lastIndex;
+            std::cout<< "lastIndex after = "<< lastIndex <<std::endl;
             count++;
         }
         return result;
