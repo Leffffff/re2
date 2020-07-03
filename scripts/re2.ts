@@ -1,7 +1,9 @@
+import { resolve } from 'path';
 import { execRegex, replaceString, testRegex } from './reFunctions';
 import { errorHandler, freeUpMemory, getPointers, validate } from './utils';
 
-const re2Module = require('../../bin/re2Lib') as RegExp2;
+const modulePath = resolve(process.cwd() + '/bin/re2Lib');
+const re2Module = require(modulePath) as RegExp2;
 export class RE2 {
   private regex: string;
   private flag?: string;
@@ -25,7 +27,7 @@ export class RE2 {
   /** @function _replace : returns boolean if regex matches string. */
   test = (text: string): boolean => testRegex(re2Module, text, this.regex);
 
-  /** @function _replace : returns array of matched capture groups or empty array. Works like RegExp matchAll */
+  /** @function _replace : returns array of fullmatch and matched capture groups or null. Works like RegExp matchAll */
   exec = (text: string): string[][] | null =>
     execRegex(re2Module, text, this.regex, this.flag);
 

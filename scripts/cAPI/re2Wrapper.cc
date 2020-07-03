@@ -72,21 +72,21 @@ extern "C"
         re2::StringPiece sp(inputString);
         re2::RE2 regex(inputRegex);
 
-        int n = getQtyOfCapturingGroups(inputRegex);
-        std::vector<re2::StringPiece> groups(n);
+        int raw = getQtyOfCapturingGroups(inputRegex);
+        std::vector<re2::StringPiece> groups(raw);
 
         if (!check(inputString, inputRegex))
             return nullptr;
 
-        int nn = getQtyOfMatchedGroups(inputString, inputRegex, flag);
-        char ***result = new char **[nn];
+        int columns = getQtyOfMatchedGroups(inputString, inputRegex, flag);
+        char ***result = new char **[columns];
         int count = 0,
             lastIndex = 0;
 
         while (regex.Match(sp, lastIndex, sp.size(), re2::RE2::UNANCHORED, &(groups[0]), groups.size()))
         {
-            result[count] = new char *[n];
-            for (int i = 0; i < n; ++i)
+            result[count] = new char *[raw];
+            for (int i = 0; i < raw; ++i)
             {
                 const size_t size = groups[i].size();
                 result[count][i] = new char[size + 1];
