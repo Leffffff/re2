@@ -1,5 +1,7 @@
 import {
   copyFileSync,
+  existsSync,
+  mkdirSync,
   readdirSync,
   readFile,
   unlinkSync,
@@ -34,7 +36,8 @@ const updateIncludes = (folder: string): void =>
 ((): void => {
   const targetDirs = ['google-re2/re2/', 'google-re2/util/'];
   const folder = './basement/';
-  cleanUp(folder);
+  if (existsSync(folder)) cleanUp(folder);
+  else mkdirSync(folder);
   copyFiles(folder, targetDirs);
   updateIncludes(folder);
 })();

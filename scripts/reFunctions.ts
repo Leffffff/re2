@@ -62,17 +62,17 @@ export const execRegex = (
 
 export const replaceString = ({
   re2,
-  baseText,
+  string,
   regex,
   rewrite,
   flag = '',
 }: ReplaceInput): string => {
-  errorHandler(baseText, 'Input text can not be');
+  errorHandler(string, 'Input text can not be');
   errorHandler(rewrite, 'Replacement string can not be');
 
   const [textPointer, regexPointer, rewritePointer, flagPointer] = getPointers(
     re2,
-    baseText,
+    string,
     regex,
     rewrite,
     flag

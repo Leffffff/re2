@@ -48,7 +48,7 @@ type RegExp2 = {
   ): Pointer;
 };
 
-type ReplaceParams = 'baseText' | 'regex' | 'rewrite' | 'flag';
+type ReplaceParams = 'string' | 'regex' | 'rewrite' | 'flag';
 
 type ReplaceInput = {
   re2: RegExp2;

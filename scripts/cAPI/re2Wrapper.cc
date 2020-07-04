@@ -20,7 +20,7 @@ extern "C"
     // if the regexp is "(a)(b)", returns 2 + 1(do for fullcapture).
     int getQtyOfCapturingGroups(char *inputRegex)
     {
-        return re2::RE2(inputRegex).NumberOfCapturingGroups() + 1;
+        return re2::RE2(inputRegex).NumberOfCapturingGroups();
     }
 
     // Return the number of matched groups
@@ -34,7 +34,7 @@ extern "C"
         re2::StringPiece sp(inputString);
         re2::RE2 regex(inputRegex);
 
-        int n = getQtyOfCapturingGroups(inputRegex);
+        int n = getQtyOfCapturingGroups(inputRegex) + 1;
         std::vector<re2::StringPiece> groups(n);
 
         int count = 0,
@@ -105,7 +105,7 @@ extern "C"
         re2::StringPiece sp(inputString);
         re2::RE2 regex(inputRegex);
 
-        int raw = getQtyOfCapturingGroups(inputRegex);
+        int raw = getQtyOfCapturingGroups(inputRegex) + 1;
         std::vector<re2::StringPiece> groups(raw);
 
         if (!check(inputString, inputRegex))
