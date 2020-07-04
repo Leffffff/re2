@@ -1,12 +1,12 @@
-#include "../../basement/re2.h"
-#include "../../basement/filtered_re2.h"
+#include "../../foundation/re2.h"
+#include "../../foundation/filtered_re2.h"
 #include <stdio.h>
 #include <string>
 #include <vector>
 #include <iostream>
 
 extern "C"
-{ 
+{
     // Emscripten works only with C code, so instead string we use char*
     // Return the pointer of input string
     char *getStringPtr(const std::string &inputString)
@@ -69,7 +69,7 @@ extern "C"
     // Example: simple replace:
     // replace('XMAS : Twas the night before Xmas...', '(?i)xmas', 'Christmas', '')
     // return 'Christmas : Twas the night before Xmas...')
-    // 
+    //
     // With flag global replace all matches of "regex" in "text" with "rewrite".
     // Example: simple replace with flag global:
     // replace('XMAS : Twas the night before Xmas...', '(?i)xmas', 'Christmas', 'g')
@@ -90,12 +90,12 @@ extern "C"
         re2::RE2 regex(regexp);
         return regex.ok() ? nullptr : getStringPtr(regex.error());
     }
-    
+
     // Capture the first match of "regex" in "text".
     // Example: simple exec:
     // exec('123abc123abc123', '(abc)', '')
     // return [[abc, abc]]. First element is fullmatch, rest are captures
-    // 
+    //
     // With flag global capture all matches of "regex" in "text".
     // Example: simple exec with flag global:
     // exec('123abc123abc123', '(abc)', 'g')

@@ -64,29 +64,27 @@ Returns number of capture groups.
 
 `git submodule update --init`
 
-### Emscripten
-
-#### Clone emsdk in _your storage of repos_
+### Clone emsdk in _your storage of repos_
 
 `git clone https://github.com/emscripten-core/emsdk.git`
 
-#### Enter that directory
+### Enter that directory
 
 `cd emsdk`
 
-#### Fetch the latest version of the emsdk (not needed the first time you clone)
+### Fetch the latest version of the emsdk (not needed the first time you clone)
 
 `git pull`
 
-#### Download and install the latest SDK tools
+### Download and install the latest SDK tools
 
 `./emsdk install latest`
 
-#### Make the "latest" SDK "active" for the current user. (writes ~/.emscripten file)
+### Make the "latest" SDK "active" for the current user. (writes ~/.emscripten file)
 
 `./emsdk activate latest`
 
-#### Activate PATH and other environment variables in the current terminal
+### Activate PATH and other environment variables in the current terminal
 
 from emsdk dir:
 `source ./emsdk_env.sh`
@@ -94,11 +92,15 @@ from emsdk dir:
 from re2:
 `source ../emsdk/emsdk_env.sh`
 
-#### Compile C code
+### Compile C code
 
-##### make sure you have permissions to execute the file `chmod +x ./compile.sh`
+#### Update/create foundation folder running
 
-Run `npm run compile`
+`npm run foundation`
+
+##### Make sure you have permissions to execute the file `chmod +x ./compile.sh`
+
+Run script `npm run compile`
 
 #### Testing
 

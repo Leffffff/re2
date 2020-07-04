@@ -35,7 +35,7 @@ const updateIncludes = (folder: string): void =>
 
 ((): void => {
   const targetDirs = ['google-re2/re2/', 'google-re2/util/'];
-  const folder = './basement/';
+  const folder = './foundation/';
   if (existsSync(folder)) cleanUp(folder);
   else mkdirSync(folder);
   copyFiles(folder, targetDirs);

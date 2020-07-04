@@ -7,8 +7,8 @@
   "scripts": {
     "test": "npx tsc && jest",
     "compile": "./compile.sh",
-    "basement": "npx tsc && node lib/scripts/updateBuild.js",
-    "build:update": "npm run basement && npm run compile && npm test"
+    "foundation": "npx tsc && node lib/scripts/updateBuild.js",
+    "build:update": "npm run foundation && npm run compile && npm test"
   },
   "repository": {
     "type": "git",
