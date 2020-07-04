@@ -1,8 +1,5 @@
 # RE2
 
-import { execRegex, replaceString, testRegex } from './reFunctions';
-import { errorHandler, freeUpMemory, getPointers, validate } from './utils';
-
 ## Getting Started
 
 ### Installation
