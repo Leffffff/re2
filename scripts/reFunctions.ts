@@ -35,7 +35,7 @@ export const execRegex = (
     flag
   );
 
-  const captureGroups = re2._getQtyOfCapturingGroups(regexPointer);
+  const captureGroups = re2._getQtyOfCapturingGroups(regexPointer) + 1;
   if (captureGroups < 0) throw Error('Error with groups');
 
   if (captureGroups === 0) return null;
