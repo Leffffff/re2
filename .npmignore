@@ -1,7 +1,7 @@
-./vscode
+.vscode
 .DS_Store
 google-re2/
-basement/
+foundation/
 .gitignore
 .gitmodules
 .prettierrc.yaml
