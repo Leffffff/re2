@@ -2,7 +2,7 @@ import * as chalk from 'chalk';
 
 export const errorHandler = (value: unknown, message: string): void => {
   if (typeof value !== 'string')
-    throw Error(
+    throw TypeError(
       chalk.red(
         `${message} ${chalk.underline(value === null ? null : typeof value)}.`
       )
