@@ -5,7 +5,7 @@
   "main": "./lib/scripts/re2.js",
   "types": "./lib/scripts/re2.d.ts",
   "scripts": {
-    "test": "npx tsc && jest",
+    "test": "npx tsc && jest lib/**/*.test.js",
     "compile": "./compile.sh",
     "foundation": "npx tsc && node lib/scripts/updateBuild.js",
     "build:update": "npm run foundation && npm run compile && npm test"
@@ -18,12 +18,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/jest": "^26.0.3",
     "chalk": "^4.1.0",
-    "jest": "^26.1.0",
-    "ts-jest": "^26.1.1"
+    "jest": "^26.1.0"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.3",
     "@types/node": "^13.13.12",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",
@@ -34,21 +33,5 @@
     "eslint-plugin-prettier": "^3.1.1",
     "prettier": "^1.19.1",
     "typescript": "3.8.3"
-  },
-  "jest": {
-    "transform": {
-      "\\.ts$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js|ts)x?$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "testPathIgnorePatterns": [
-      "/lib/",
-      "/node_modules/",
-      "/bin/"
-    ]
   }
 }

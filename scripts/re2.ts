@@ -1,9 +1,7 @@
-import { resolve } from 'path';
 import { execRegex, replaceString, testRegex } from './reFunctions';
 import { errorHandler, freeUpMemory, getPointers, validate } from './utils';
 
-const modulePath = resolve(process.cwd() + '/bin/re2Lib'); // delete after tests rewrite
-const re2Module = require(modulePath) as RegExp2;
+const re2Module = require('../../bin/re2Lib') as RegExp2;
 export class RE2 {
   private regex: string;
   private flag?: string;
@@ -46,6 +44,6 @@ export class RE2 {
       string,
       regex: this.regex,
       rewrite,
-      flag: this.flag || '',
+      flag: this.flag ?? '',
     });
 }
