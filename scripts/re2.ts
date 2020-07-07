@@ -14,7 +14,7 @@ export class RE2 {
     this.flag = flag;
   }
 
-  /** @function numberOfCaptureGroups : Returns number of capture groups. */
+  /** Returns number of capture groups. */
   numberOfCaptureGroups = (): number => {
     const [regexPointer] = getPointers(re2Module, this.regex);
     const number = re2Module._getQtyOfCapturingGroups(regexPointer);
@@ -22,19 +22,19 @@ export class RE2 {
     return number;
   };
 
-  /** @function test : Executes a search for a match between a regular expression and a specified string.
+  /** Executes a search for a match between a regular expression and a specified string.
    * Returns true or false.
    * @param string Can be only a string
    */
   test = (string: string): boolean => testRegex(re2Module, string, this.regex);
 
-  /** @function exec : Returns all matches of the regular expression against a string.
+  /** Returns all matches of the regular expression against a string.
    * @param string Can be only a string
    */
   exec = (string: string): string[][] | null =>
     execRegex(re2Module, string, this.regex, this.flag);
 
-  /** @function replace Return new string with some or all matches of a pattern replaced by a replacement.
+  /** Return new string with some or all matches of a pattern replaced by a replacement.
    * @param string Can be only a string
    * @param string Can be only a string
    */
