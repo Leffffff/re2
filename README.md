@@ -91,6 +91,10 @@ from re2:
 
 ### Compile C code
 
+#### Install dependencies
+
+`npm i`
+
 #### Update/create foundation folder running
 
 `npm run foundation`
