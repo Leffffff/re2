@@ -1,10 +1,18 @@
-import * as chalk from 'chalk';
+import { createRequire } from 'module';
+
+const newRequire = createRequire(import.meta.url);
+const chalk = newRequire('chalk');
+const chalkInstance = new chalk.Instance({
+  level: 1,
+});
 
 export const errorHandler = (value: unknown, message: string): void => {
   if (typeof value === 'undefined' || value === null)
     throw TypeError(
-      chalk.red(
-        `${message} ${chalk.underline(value === null ? null : typeof value)}.`
+      chalkInstance.red(
+        `${message} ${chalkInstance.underline(
+          value === null ? null : typeof value
+        )}.`
       )
     );
 };

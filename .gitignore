@@ -7,3 +7,4 @@ google-re2/*
 !google-re2/re2/*
 !google-re2/util/*
 lib/
+dist/

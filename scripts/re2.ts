@@ -1,6 +1,8 @@
 import { execRegex, replaceString, testRegex } from './reFunctions';
 import { errorHandler, freeUpMemory, getPointers, validate } from './utils';
+import { createRequire } from 'module';
 
+const require = createRequire(import.meta.url);
 const re2Module = require('../../bin/re2Lib') as RegExp2;
 export class RE2 {
   private regex: string;
