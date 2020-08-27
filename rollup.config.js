@@ -13,14 +13,15 @@ const buildTestInput = (filenames) => {
   }, {});
 };
 
-const externalModules = ['chalk', 'module'];
+const externalModules = ['chalk', 'module', 'path', 'url'];
+
 const buildPlugins = [nodeResolve(), commonjs({ include: 'node_modules/**' })];
+
 const outputOptions = {
   format: 'es',
   freeze: false,
   interop: 'auto',
   sourcemap: true,
-  externalLiveBindings: false,
   hoistTransitiveImports: false,
 };
 
@@ -48,9 +49,10 @@ export default () => {
     external: externalModules,
     output: {
       ...outputOptions,
-      format: 'cjs',
+      format: 'es',
       dir: 'dist',
       chunkFileNames: '[name].js',
+      entryFileNames: '[name].js',
       sourcemap: false,
     },
     plugins: [
