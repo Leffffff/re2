@@ -51,7 +51,7 @@ export default () => {
       ...outputOptions,
       format: 'es',
       dir: 'dist',
-      chunkFileNames: '[name].js',
+      chunkFileNames: '__tests__/[name].js',
       entryFileNames: '[name].js',
       sourcemap: false,
     },

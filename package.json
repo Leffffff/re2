@@ -13,6 +13,11 @@
       "cjs",
       "mjs"
     ],
+    "moduleDirectories": [
+      "node_modules",
+      "src",
+      "bin"
+    ],
     "transform": {},
     "testEnvironment": "jest-environment-node"
   },
