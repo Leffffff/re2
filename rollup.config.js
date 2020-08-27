@@ -37,7 +37,8 @@ export default () => {
       ...buildPlugins,
       typescript({ outDir: 'lib', exclude: '__tests__/**/*.ts' }),
       replace({
-        "require('../../bin/re2Lib')": "require('../../bin/re2Lib.cjs')",
+        "resolve(__dirname, '../../bin/re2Lib')":
+          "resolve(__dirname, '../../bin/re2Lib.cjs')",
         delimiters: ['', ''],
       }),
     ],
