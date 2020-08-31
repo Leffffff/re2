@@ -5,6 +5,7 @@ import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
+import { terser } from 'rollup-plugin-terser';
 
 const buildTestInput = (filenames) => {
   return filenames.reduce((accum, filename) => {
@@ -15,7 +16,11 @@ const buildTestInput = (filenames) => {
 
 const externalModules = ['chalk', 'module', 'path', 'url'];
 
-const buildPlugins = [nodeResolve(), commonjs({ include: 'node_modules/**' })];
+const buildPlugins = [
+  nodeResolve(),
+  commonjs({ include: 'node_modules/**' }),
+  terser(),
+];
 
 const outputOptions = {
   format: 'es',

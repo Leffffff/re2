@@ -120,3 +120,7 @@ git pull --recurse-submodules
 ```bash
 npm run build:update
 ```
+
+### Rollup
+
+To change rollup configuration read `Rollup_FAQ.md` in `yaml-core` package or visit https://rollupjs.org/guide/en/.
