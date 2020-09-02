@@ -9,7 +9,7 @@ import {
 } from 'fs';
 
 const cleanUp = (folder: string): void =>
-  readdirSync(folder).forEach(file => unlinkSync(`${folder}${file}`));
+  readdirSync(folder).forEach((file) => unlinkSync(`${folder}${file}`));
 
 const isUsefulFile = (file: string): boolean =>
   (file.endsWith('.cc') || file.endsWith('.h')) &&
@@ -17,14 +17,14 @@ const isUsefulFile = (file: string): boolean =>
   !file.startsWith('fuzz');
 
 const copyFiles = (folder: string, targetDirs: string[]): void =>
-  targetDirs.forEach(dir =>
-    readdirSync(dir).forEach(file => {
+  targetDirs.forEach((dir) =>
+    readdirSync(dir).forEach((file) => {
       if (isUsefulFile(file)) copyFileSync(`${dir}${file}`, `${folder}${file}`);
     })
   );
 
 const updateIncludes = (folder: string): void =>
-  readdirSync(folder).forEach(file =>
+  readdirSync(folder).forEach((file) =>
     readFile(`${folder}${file}`, 'utf8', (err, data) => {
       if (err) return console.log(err);
       const regex = /#include "(?:re2|util)\//g;

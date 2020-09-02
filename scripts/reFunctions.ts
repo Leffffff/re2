@@ -11,8 +11,8 @@ export const testRegex = (
   regex: string
 ): boolean => {
   errorHandler(text, 'Input text can not be');
-
-  const [textPointer, regexPointer] = getPointers(re2, text, regex);
+  const string = `${text}`;
+  const [textPointer, regexPointer] = getPointers(re2, string, regex);
 
   const isFulfilled = !!re2._check(textPointer, regexPointer);
 
@@ -27,10 +27,11 @@ export const execRegex = (
   flag = ''
 ): string[][] | null => {
   errorHandler(text, 'Input text can not be');
+  const string = `${text}`; // if object come in
 
   const [textPointer, regexPointer, flagPointer] = getPointers(
     re2,
-    text,
+    string,
     regex,
     flag
   );
@@ -69,12 +70,14 @@ export const replaceString = ({
 }: ReplaceInput): string => {
   errorHandler(string, 'Input text can not be');
   errorHandler(rewrite, 'Replacement string can not be');
+  const text = `${string}`;
+  const rewriteString = `${rewrite}`;
 
   const [textPointer, regexPointer, rewritePointer, flagPointer] = getPointers(
     re2,
-    string,
+    text,
     regex,
-    rewrite,
+    rewriteString,
     flag
   );
 
