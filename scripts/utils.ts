@@ -1,8 +1,6 @@
-import { createRequire } from 'module';
+import { Instance } from 'chalk';
 
-const newRequire = createRequire(import.meta.url);
-const chalk = newRequire('chalk');
-const chalkInstance = new chalk.Instance({
+const chalkInstance = new Instance({
   level: 1,
 });
 

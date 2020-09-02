@@ -14,3 +14,4 @@ __tests__/
 scripts/
 compile.sh
 tsconfig.json
+lib/updateBuild.*

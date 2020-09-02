@@ -4,7 +4,6 @@
   "description": "RE2 for different platforms (Linux, Windows, macOS)",
   "main": "./lib/scripts/re2.js",
   "types": "./lib/scripts/re2.d.ts",
-  "type": "module",
   "jest": {
     "testRegex": ".test\\.js",
     "moduleFileExtensions": [
@@ -22,9 +21,10 @@
     "testEnvironment": "jest-environment-node"
   },
   "scripts": {
-    "test": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "prepublish": "npm test",
+    "test": "npm run build && jest",
     "compile": "./compile.sh",
-    "foundation": "npx tsc && node lib/scripts/updateBuild.js",
+    "foundation": "npm run build && node lib/scripts/updateBuild.js",
     "build:update": "npm run foundation && npm run compile && npm test",
     "build": "rm -rf ./lib ./dist && rollup --config"
   },

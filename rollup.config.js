@@ -14,7 +14,7 @@ const buildTestInput = (filenames) => {
   }, {});
 };
 
-const externalModules = ['chalk', 'module', 'path', 'url'];
+const externalModules = ['chalk', 'path', 'url', 'fs'];
 
 const buildPlugins = [
   nodeResolve(),
@@ -23,8 +23,7 @@ const buildPlugins = [
 ];
 
 const outputOptions = {
-  format: 'es',
-  freeze: false,
+  format: 'cjs',
   interop: 'auto',
   sourcemap: true,
   hoistTransitiveImports: false,
@@ -32,7 +31,10 @@ const outputOptions = {
 
 export default () => {
   const mainBuild = {
-    input: { 'scripts/re2': 'scripts/re2.ts' },
+    input: {
+      'scripts/re2': 'scripts/re2.ts',
+      'scripts/updateBuild': 'scripts/updateBuild.ts',
+    },
     external: externalModules,
     output: {
       ...outputOptions,
@@ -55,7 +57,6 @@ export default () => {
     external: externalModules,
     output: {
       ...outputOptions,
-      format: 'es',
       dir: 'dist',
       chunkFileNames: '__tests__/[name].js',
       entryFileNames: '[name].js',
