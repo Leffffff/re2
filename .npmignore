@@ -15,3 +15,4 @@ compile.sh
 tsconfig.json
 lib/scripts/updateBuild.*
 rollup.config.js
+node_modules/
