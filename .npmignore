@@ -9,9 +9,9 @@ foundation/
 re2Wrapper.cc
 *.md
 lib/__tests__/
-dist/
 __tests__/
 scripts/
 compile.sh
 tsconfig.json
-lib/updateBuild.*
+lib/scripts/updateBuild.*
+rollup.config.js

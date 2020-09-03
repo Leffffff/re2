@@ -57,14 +57,14 @@ export default () => {
     external: externalModules,
     output: {
       ...outputOptions,
-      dir: 'dist',
-      chunkFileNames: '__tests__/[name].js',
+      dir: 'lib/__tests__',
+      chunkFileNames: '[name].js',
       entryFileNames: '[name].js',
       sourcemap: false,
     },
     plugins: [
       ...buildPlugins,
-      typescript({ outDir: 'dist', declaration: false }),
+      typescript({ outDir: 'lib/__tests__', declaration: false }),
     ],
   };
 
