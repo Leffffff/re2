@@ -36,7 +36,7 @@ Returns all matches of the regular expression against a string.
 
 Works like non-iterable RegExp matchAll.
 
-Exec returns all results in 2D array where each result consist of [fullmatch, ...captureMathces].
+Exec returns all results in a 2D array where each result consists of [fullmatch, ...captureMathces].
 
 Example:
 
@@ -49,7 +49,7 @@ regex.exec('123abc123zxc123abc123zxc123')
 
 ### `RE2.replace(string, rewrite)`
 
-Return new string with some or all matches of a pattern replaced by a replacement.
+Return a new string with some or all matches of a pattern replaced by a replacement.
 
 ### `RE2.numberOfCaptureGroups()`
 
@@ -57,8 +57,12 @@ Returns number of capture groups.
 
 ## Working with Emscripten
 
+### For Mac
+
+If you use mac proceed to [Pull submodule google-re2](#pull-submodule-google-re2).
+You need node and python to be installed.
+
 ### For Windows
-If you use mac you dont need to do the following actions. Proceed to [Pull submodule google-re2](#pull-submodule-google-re2)
 
 Install Debian from Microsoft Store, then launch and create UNIX user.
 ```
@@ -66,26 +70,10 @@ Enter new UNIX username:
 New password:
 Retype new password:
 ```
+
 Then launch:
 ```
-sudo apt-get update
-```
-Then install:
-1. nodejs
-```
-sudo apt-get install nodejs
-```
-2. npm 
-``` 
-sudo apt-get install npm
-```
-3. git
-```
-sudo apt-get install git
-```
-4. python
-```
-sudo apt-get install python
+sudo apt-get update -y && sudo apt-get install nodejs npm git python -y
 ```
 
 Install Subsystem WSL using Setting on Windows 10:
@@ -93,10 +81,10 @@ Install Subsystem WSL using Setting on Windows 10:
 1. Open `Settings`.
 2. Click on `Apps`.
 3. Under the `Related settings` section, click the `Programs and Features` option.
-4. Click the `Turn Windows features on or off option` on the left pane.
-5. Check the `Windows Subsystem` for Linux checkbox.
+4. Click the `Turn Windows features on or off` option on the left pane.
+5. Check the `Windows Subsystem` for the Linux checkbox.
 6. Click the `OK` button.
-7. Click the `Restart now` button.
+7. Then you need to reboot the PC.
 
 Launch IDE with WSL, and do all next actions in WSL Terminal.
 
