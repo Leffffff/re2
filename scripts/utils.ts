@@ -1,10 +1,16 @@
-import * as chalk from 'chalk';
+import { Instance } from 'chalk';
+
+const chalkInstance = new Instance({
+  level: 1,
+});
 
 export const errorHandler = (value: unknown, message: string): void => {
   if (typeof value === 'undefined' || value === null)
     throw TypeError(
-      chalk.red(
-        `${message} ${chalk.underline(value === null ? null : typeof value)}.`
+      chalkInstance.red(
+        `${message} ${chalkInstance.underline(
+          value === null ? null : typeof value
+        )}.`
       )
     );
 };
