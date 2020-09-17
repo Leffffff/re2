@@ -50,7 +50,13 @@ export const getStringArray = (
 export const validate = (re2: RegExp2, regex: string): void => {
   const [regexPointer] = getPointers(re2, regex);
   const statusPointer = re2._validate(regexPointer);
-  if (statusPointer !== 0) throw Error(re2.UTF8ToString(statusPointer));
+  if (statusPointer !== 0) {
+    console.log(
+      chalkInstance.redBright('Failed to validate regex: ') +
+        chalkInstance.yellow(regex)
+    );
+    process.exit();
+  }
 
   freeUpMemory(re2, regexPointer, statusPointer);
 };

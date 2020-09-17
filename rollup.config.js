@@ -45,7 +45,7 @@ export default () => {
       typescript({ outDir: 'lib', exclude: '__tests__/**/*.ts' }),
       replace({
         "resolve(__dirname, '../../bin/re2Lib')":
-          "resolve(__dirname, '../../bin/re2Lib.cjs')",
+          "resolve(__dirname, '../../bin/re2Lib.js')",
         delimiters: ['', ''],
       }),
     ],
