@@ -47,6 +47,17 @@ export const getStringArray = (
   return arr;
 };
 
+export const isBalancedParenthesis = (string: string): boolean =>
+  !string.split('').reduce((uptoPrevChar, thisChar, index) => {
+    if (thisChar === '(' || thisChar === '{' || thisChar === '[')
+      return string[index - 1] === '\\' ? uptoPrevChar : ++uptoPrevChar;
+
+    if (thisChar === ')' || thisChar === '}' || thisChar === ']')
+      return string[index - 1] === '\\' ? uptoPrevChar : --uptoPrevChar;
+
+    return uptoPrevChar;
+  }, 0);
+
 export const validate = (re2: RegExp2, regex: string): void => {
   const [regexPointer] = getPointers(re2, regex);
   const statusPointer = re2._validate(regexPointer);

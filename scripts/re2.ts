@@ -1,5 +1,11 @@
 import { execRegex, replaceString, testRegex } from './reFunctions';
-import { errorHandler, freeUpMemory, getPointers, validate } from './utils';
+import {
+  errorHandler,
+  freeUpMemory,
+  getPointers,
+  isBalancedParenthesis,
+  validate,
+} from './utils';
 
 const re2Module = require('../../bin/re2Lib') as RegExp2;
 export class RE2 {
@@ -8,6 +14,8 @@ export class RE2 {
 
   constructor(regex: string, flag?: string) {
     errorHandler(regex, 'Regular expression can not be');
+    if (!isBalancedParenthesis(regex))
+      throw Error(`Invalid regex. Check parenthesis ${regex}`);
 
     validate(re2Module, regex);
     this.regex = regex;
