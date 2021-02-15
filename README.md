@@ -5,13 +5,13 @@
 ### Installation
 
 ``` bash
-npm i @skyfence/re2-wasm
+npm i wasm-re2
 ```
 
 ### Usage
 
 ``` typescript
-import { RE2 } from '@skyfence/re2-wasm';
+import { RE2 } from 'wasm-re2';
 
 const regex = new RE2('(b|^a)', 'g');
 
@@ -65,6 +65,7 @@ You need node and python to be installed.
 ### For Windows
 
 Install Debian from Microsoft Store, then launch and create UNIX user.
+
 ```
 Enter new UNIX username:
 New password:
@@ -72,6 +73,7 @@ Retype new password:
 ```
 
 Then launch:
+
 ```
 sudo apt-get update -y && sudo apt-get install nodejs npm git python -y
 ```
@@ -154,4 +156,4 @@ npm run build:update
 
 ### Rollup
 
-To change rollup configuration read `Rollup_FAQ.md` in `yaml-core` package or visit https://rollupjs.org/guide/en/.
+To change rollup configuration read `Rollup_FAQ.md` in `yaml-core` package or visit <https://rollupjs.org/guide/en/>.

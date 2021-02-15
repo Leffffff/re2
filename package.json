@@ -1,5 +1,5 @@
 {
-  "name": "re2-wasm",
+  "name": "wasm-re2",
   "version": "1.0.11",
   "description": "RE2 for different platforms (Linux, Windows, macOS)",
   "main": "./lib/scripts/re2.js",
