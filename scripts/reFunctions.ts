@@ -5,97 +5,89 @@ import {
   getStringArray,
 } from './utils';
 
-export const testRegex = (
+export const re2Functions = (
   re2: RegExp2,
-  text: string,
-  regex: string
-): boolean => {
-  errorHandler(text, 'Input text can not be');
-  const string = `${text}`;
-  const [textPointer, regexPointer] = getPointers(re2, string, regex);
-
-  const isFulfilled = !!re2._check(textPointer, regexPointer);
-
-  freeUpMemory(re2, textPointer, regexPointer);
-  return isFulfilled;
-};
-
-export const execRegex = (
-  re2: RegExp2,
-  text: string,
   regex: string,
-  flag = ''
-): string[][] | null => {
-  errorHandler(text, 'Input text can not be');
-  const string = `${text}`; // if object come in
+  flag: string
+): RE2Functions => {
+  return {
+    testRegex: (text: string): boolean => {
+      errorHandler(text, 'Input text can not be');
+      const string = `${text}`;
+      const [textPointer, regexPointer] = getPointers(re2, string, regex);
 
-  const [textPointer, regexPointer, flagPointer] = getPointers(
-    re2,
-    string,
-    regex,
-    flag
-  );
+      const isFulfilled = !!re2._check(textPointer, regexPointer);
 
-  const captureGroups = re2._getQtyOfCapturingGroups(regexPointer) + 1;
-  if (captureGroups < 0) throw Error('Error with groups');
+      freeUpMemory(re2, textPointer, regexPointer);
+      return isFulfilled;
+    },
+    execRegex: (text: string): string[][] | null => {
+      errorHandler(text, 'Input text can not be');
+      // if object come in
+      const string = `${text}`;
 
-  if (captureGroups === 0) return null;
+      const [textPointer, regexPointer, flagPointer] = getPointers(
+        re2,
+        string,
+        regex,
+        flag
+      );
 
-  const arrayPointer = re2._exec(textPointer, regexPointer, flagPointer);
-  if (arrayPointer === 0) return null;
+      const captureGroups = re2._getQtyOfCapturingGroups(regexPointer) + 1;
+      if (captureGroups < 0) throw Error('Error with groups');
 
-  const matchedGroups = re2._getQtyOfMatchedGroups(
-    textPointer,
-    regexPointer,
-    flagPointer
-  );
+      if (captureGroups === 0) return null;
 
-  const matched = getStringArray(
-    re2,
-    arrayPointer,
-    matchedGroups,
-    captureGroups
-  );
+      const arrayPointer = re2._exec(textPointer, regexPointer, flagPointer);
+      if (arrayPointer === 0) return null;
 
-  freeUpMemory(re2, textPointer, regexPointer, arrayPointer, flagPointer);
-  return matched;
-};
+      const matchedGroups = re2._getQtyOfMatchedGroups(
+        textPointer,
+        regexPointer,
+        flagPointer
+      );
 
-export const replaceString = ({
-  re2,
-  string,
-  regex,
-  rewrite,
-  flag = '',
-}: ReplaceInput): string => {
-  errorHandler(string, 'Input text can not be');
-  errorHandler(rewrite, 'Replacement string can not be');
-  const text = `${string}`;
-  const rewriteString = `${rewrite}`;
+      const matched = getStringArray(
+        re2,
+        arrayPointer,
+        matchedGroups,
+        captureGroups
+      );
 
-  const [textPointer, regexPointer, rewritePointer, flagPointer] = getPointers(
-    re2,
-    text,
-    regex,
-    rewriteString,
-    flag
-  );
+      freeUpMemory(re2, textPointer, regexPointer, arrayPointer, flagPointer);
+      return matched;
+    },
+    replaceString: ({ string, rewrite }: ReplaceInput): string => {
+      errorHandler(string, 'Input text can not be');
+      errorHandler(rewrite, 'Replacement string can not be');
+      // if object come in
+      const text = `${string}`;
+      const rewriteString = `${rewrite}`;
 
-  const replacedStringPointer = re2._replace(
-    textPointer,
-    regexPointer,
-    rewritePointer,
-    flagPointer
-  );
-  const replacedString = re2.UTF8ToString(replacedStringPointer);
+      const [
+        textPointer,
+        regexPointer,
+        rewritePointer,
+        flagPointer,
+      ] = getPointers(re2, text, regex, rewriteString, flag);
 
-  freeUpMemory(
-    re2,
-    textPointer,
-    regexPointer,
-    rewritePointer,
-    flagPointer,
-    replacedStringPointer
-  );
-  return replacedString;
+      const replacedStringPointer = re2._replace(
+        textPointer,
+        regexPointer,
+        rewritePointer,
+        flagPointer
+      );
+      const replacedString = re2.UTF8ToString(replacedStringPointer);
+
+      freeUpMemory(
+        re2,
+        textPointer,
+        regexPointer,
+        rewritePointer,
+        flagPointer,
+        replacedStringPointer
+      );
+      return replacedString;
+    },
+  };
 };

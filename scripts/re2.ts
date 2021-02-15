@@ -1,25 +1,18 @@
-import { execRegex, replaceString, testRegex } from './reFunctions';
-import {
-  errorHandler,
-  freeUpMemory,
-  getPointers,
-  isBalancedParenthesis,
-  validate,
-} from './utils';
+import { re2Functions } from './reFunctions';
+import { freeUpMemory, getPointers, validate } from './utils';
 
 const re2Module = require('../../bin/re2Lib') as RegExp2;
 export class RE2 {
   private regex: string;
-  private flag?: string;
+  private re2: RE2Functions;
 
-  constructor(regex: string, flag?: string) {
-    errorHandler(regex, 'Regular expression can not be');
-    if (!isBalancedParenthesis(regex))
-      throw Error(`Invalid regex. Check parenthesis ${regex}`);
-
+  /**
+   * @param regex can not be undefined or null
+   */
+  constructor(regex: string, flag = '') {
     validate(re2Module, regex);
     this.regex = regex;
-    this.flag = flag;
+    this.re2 = re2Functions(re2Module, regex, flag);
   }
 
   /** Returns number of capture groups. */
@@ -34,24 +27,17 @@ export class RE2 {
    * Returns true or false.
    * @param string Can be only a string
    */
-  test = (string: string): boolean => testRegex(re2Module, string, this.regex);
+  test = (string: string): boolean => this.re2.testRegex(string);
 
   /** Returns all matches of the regular expression against a string.
    * @param string Can be only a string
    */
-  exec = (string: string): string[][] | null =>
-    execRegex(re2Module, string, this.regex, this.flag);
+  exec = (string: string): string[][] | null => this.re2.execRegex(string);
 
   /** Return new string with some or all matches of a pattern replaced by a replacement.
    * @param string Can be only a string
-   * @param string Can be only a string
+   * @param rewrite Can be only a string
    */
   replace = (string: string, rewrite: string): string =>
-    replaceString({
-      re2: re2Module,
-      string,
-      regex: this.regex,
-      rewrite,
-      flag: this.flag ?? '',
-    });
+    this.re2.replaceString({ string, rewrite });
 }

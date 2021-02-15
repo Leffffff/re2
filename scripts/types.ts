@@ -48,10 +48,14 @@ type RegExp2 = {
   ): Pointer;
 };
 
-type ReplaceParams = 'string' | 'regex' | 'rewrite' | 'flag';
+type RE2Functions = {
+  testRegex(text: string): boolean;
+  execRegex(text: string): string[][] | null;
+  replaceString({ string, rewrite }: ReplaceInput): string;
+};
+
+type ReplaceParams = 'string' | 'rewrite';
 
 type ReplaceInput = {
-  re2: RegExp2;
-} & {
   [k in ReplaceParams]: string;
 };

@@ -1,18 +1,6 @@
-import { Instance } from 'chalk';
-
-const chalkInstance = new Instance({
-  level: 1,
-});
-
 export const errorHandler = (value: unknown, message: string): void => {
   if (typeof value === 'undefined' || value === null)
-    throw TypeError(
-      chalkInstance.red(
-        `${message} ${chalkInstance.underline(
-          value === null ? null : typeof value
-        )}.`
-      )
-    );
+    throw TypeError(`${message} ${value === null ? null : typeof value}.`);
 };
 
 export const freeUpMemory = (re2: RegExp2, ...ptrs: Pointer[]): void =>
@@ -47,7 +35,7 @@ export const getStringArray = (
   return arr;
 };
 
-export const isBalancedParenthesis = (string: string): boolean =>
+const isBalancedParenthesis = (string: string): boolean =>
   !string.split('').reduce((uptoPrevChar, thisChar, index) => {
     if (thisChar === '(' || thisChar === '{' || thisChar === '[')
       return string[index - 1] === '\\' ? uptoPrevChar : ++uptoPrevChar;
@@ -59,9 +47,14 @@ export const isBalancedParenthesis = (string: string): boolean =>
   }, 0);
 
 export const validate = (re2: RegExp2, regex: string): void => {
+  errorHandler(regex, 'Regular expression can not be');
+
   const [regexPointer] = getPointers(re2, regex);
   const statusPointer = re2._validate(regexPointer);
-  if (statusPointer !== 0) throw re2.UTF8ToString(statusPointer);
-
+  const error = re2.UTF8ToString(statusPointer);
   freeUpMemory(re2, regexPointer, statusPointer);
+  if (!!error) throw error;
+
+  if (!isBalancedParenthesis(regex))
+    throw Error(`Invalid regex. Check parenthesis ${regex}`);
 };
