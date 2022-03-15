@@ -1,10 +1,10 @@
-import { InitializeRe2 } from '../scripts/re2';
+import { getRE2Class } from '../scripts/re2';
 
 describe('Testing re2 function: replace', () => {
   let RE2: any;
 
   beforeEach(async () => {
-    RE2 = await InitializeRe2();
+    RE2 = await getRE2Class();
   });
 
   test('Global and ignore-case in regex', () => {

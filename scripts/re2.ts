@@ -55,7 +55,7 @@ export class RE2 {
     this.re2.replaceString({ string, rewrite });
 }
 
-export async function InitializeRe2(): Promise<typeof RE2> {
+export async function getRE2Class(): Promise<typeof RE2> {
   if (!re2Module) {
     await new Promise<void>((resolve) => {
       if (isLoading) {
