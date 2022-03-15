@@ -1,6 +1,12 @@
-import { RE2 } from '../scripts/re2';
+import { InitializeRe2 } from '../scripts/re2';
 
 describe('Testing re2 function: exec', () => {
+  let RE2: any;
+
+  beforeEach(async () => {
+    RE2 = await InitializeRe2();
+  });
+
   test('Simple check', () => {
     const re = new RE2('(?i)quick\\s(brown).+?(jumps)', 'g');
     const resultExec1 = re.exec(

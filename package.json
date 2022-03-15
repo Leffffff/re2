@@ -1,6 +1,6 @@
 {
-  "name": "wasm-re2",
-  "version": "1.1.0",
+  "name": "@dashevo/re2",
+  "version": "1.0.0",
   "description": "RE2 for different platforms (Linux, Windows, macOS)",
   "main": "./lib/scripts/re2.js",
   "types": "./lib/scripts/re2.d.ts",
@@ -26,7 +26,9 @@
     "compile": "./compile.sh",
     "foundation": "npm run build && node lib/scripts/updateBuild.js",
     "build:update": "npm run foundation && npm run compile && npm test",
-    "build": "rm -rf ./lib ./dist && rollup --config"
+    "build": "rm -rf ./lib ./dist && rollup --config",
+    "patch": "node ./bundle_wasm_for_web.js",
+    "lint": "eslint ./scripts"
   },
   "repository": {
     "type": "git",

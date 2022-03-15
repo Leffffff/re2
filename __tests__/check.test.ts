@@ -1,7 +1,13 @@
-import { RE2 } from '../scripts/re2';
+import { InitializeRe2 } from '../scripts/re2';
 
 describe('Testing re2 function: test', () => {
-  test('Simple test', () => {
+  let RE2: any;
+
+  beforeEach(async () => {
+    RE2 = await InitializeRe2();
+  });
+
+  test('Simple test', async () => {
     const re = new RE2('quick\\s(brown).+?(jumps)', 'g');
     const result = re.test('The Quick Brown Fox Jumps Over The Lazy Dog');
     expect(result).toBeFalsy();
