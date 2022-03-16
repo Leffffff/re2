@@ -1,5 +1,11 @@
 import { re2Functions } from './reFunctions';
-import { freeUpMemory, getPointers, validate, translateRegExp, escapeRegExp } from './utils';
+import {
+  freeUpMemory,
+  getPointers,
+  validate,
+  translateRegExp,
+  escapeRegExp,
+} from './utils';
 import { EventEmitter } from 'events';
 
 const asyncWrappedRe2Module = require('../../bin/re2Lib');
