@@ -1,5 +1,5 @@
 {
-  "name": "@dashevo/re2",
+  "name": "@dashevo/wasm-re2",
   "version": "1.0.0",
   "description": "RE2 for different platforms (Linux, Windows, macOS)",
   "main": "./lib/scripts/re2.js",
