@@ -1,7 +1,20 @@
 import { re2Functions } from './reFunctions';
 import { freeUpMemory, getPointers, validate } from './utils';
+import { EventEmitter } from 'events';
 
-const re2Module = require('../../bin/re2Lib') as RegExp2;
+const asyncWrappedRe2Module = require('../../bin/re2Lib');
+const LOADED_EVENT = 'LOADED';
+const events = new EventEmitter();
+let re2Module: RegExp2;
+let isLoading = false;
+
+async function compileWasmModule() {
+  isLoading = true;
+  re2Module = await asyncWrappedRe2Module();
+  isLoading = false;
+  events.emit(LOADED_EVENT);
+}
+
 export class RE2 {
   private regex: string;
   private re2: RE2Functions;
@@ -40,4 +53,22 @@ export class RE2 {
    */
   replace = (string: string, rewrite: string): string =>
     this.re2.replaceString({ string, rewrite });
+}
+
+export async function getRE2Class(): Promise<typeof RE2> {
+  if (!re2Module) {
+    await new Promise<void>((resolve) => {
+      if (isLoading) {
+        events.once(LOADED_EVENT, () => {
+          resolve();
+        });
+      } else {
+        compileWasmModule().then(() => {
+          resolve();
+        });
+      }
+    });
+  }
+
+  return RE2;
 }

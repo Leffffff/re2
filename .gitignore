@@ -8,3 +8,5 @@ google-re2/*
 !google-re2/util/*
 lib/
 dist/
+.idea
+.vscode
