@@ -23,7 +23,10 @@ const modifiedSourceCode = originalSourceCode
   .replace(
     'var out=Module["print"]||console.log.bind(console);var err=Module["printErr"]||console.warn.bind(console);',
     'var out=function out(){};var err=function err(){};'
+  )
+  .replace(
+    'if(!wasmBinary&&typeof WebAssembly.instantiateStreaming==="function"&&!isDataURI(wasmBinaryFile)&&!isFileURI(wasmBinaryFile)&&typeof fetch==="function")',
+    'if(!wasmBinary&&!isDataURI(wasmBinaryFile)&&!isFileURI(wasmBinaryFile))'
   );
 
 fs.writeFileSync(fileToPatch, modifiedSourceCode, 'utf-8');
-
